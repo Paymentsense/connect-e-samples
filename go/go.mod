@@ -1,4 +1,4 @@
-module github.com/Paymentsense/connect-e-samples/go
+module github.com/Paymentsense/connect-e-samples
 
 go 1.15
 

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Paymentsense/connect-e-samples/go/internal/demo"
+	"github.com/Paymentsense/connect-e-samples/internal/demo"
 )
 
 func main() {
