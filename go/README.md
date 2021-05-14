@@ -20,6 +20,7 @@ You can run connect-e demo inside a Docker container. This approach doesn't requ
 
 Below is the list of mandatory/optional environment variables required to run connect-e demo
 
+```bash
 CONNECT_E_KEY: PUT HERE THE JWT TOKEN
 API_URL: PUT HERE THE ENV API URL (https://connect-e-prod.appspot.com/v1, https://e.test.connect.paymentsense.cloud/v1)
 WEB_URL: PUT HERE THE ENV WEB URL (https://web.e.connect.paymentsense.cloud, https://web.e.test.connect.paymentsense.cloud)
@@ -27,6 +28,7 @@ MERCHANT_URL: PUT HERE THE MERCHANT URL IF USING GATEWAY CYBERSOURCE
 GATEWAY_USERNAME: PUT HERE THE MERCHANT URL IF USING GATEWAY DIFFERENT FROM CYBERSOURCE
 GATEWAY_PASSWORD: PUT HERE THE MERCHANT URL IF USING GATEWAY DIFFERENT FROM CYBERSOURCE
 WEBHOOK_URL: PUT HERE THE WEBHOOK URL
+```
 
 ### Running using docker-compose
 
