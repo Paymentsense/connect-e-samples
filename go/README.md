@@ -1,6 +1,6 @@
 # Connect-e Demo
 
-Connect-e Demo provides examples of how to get started integrating with connect-e. It is currently available in [Go](https://golang.org/), [C#](https://docs.microsoft.com/en-us/dotnet/csharp/) and [Angular](https://angular.io/).
+Connect-e Demo provides examples of how to get started integrating with connect-e. It is currently available in [Go](https://golang.org/) and [Angular](https://angular.io/).
 
 For more information, please check [Connect-e](https://docs.connect.paymentsense.cloud/ConnectE/GettingStarted) documentation.
 
