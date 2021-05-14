@@ -1,0 +1,54 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    {{ title }}
+  </h1>
+
+  <div class="container">
+      <div class="lds-ring" *ngIf="isLoading || (isPaymentExecuting && !paymentResult)" ><div></div></div>
+
+      <div *ngIf="!isLoading">
+        <div class="form-group">
+          <label for="exampleName">Name</label>
+          <input type="text" class="form-control" id="exampleName" placeholder="Enter name">
+        </div>
+        
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+      </div>
+
+      <div id="payment"></div>
+      <div class="loading"  *ngIf="isPaymentExecuting"></div>
+      <div *ngIf="!isLoading">
+          <button id="payBtn" mat-raised-button  disabled="{{isPaymentExecuting}}" color="primary" class="btn" (click)="payBtnClick()" >Pay</button>
+      </div>
+      <ul class="errors">
+        <li *ngFor="let error of validationErrors">{{error.message}}</li>
+      </ul>
+  </div>
+  
+  <div *ngIf="paymentResult">
+    <h4>Payment Info</h4>
+    <app-payment-info [paymentInfo]="paymentResult"></app-payment-info>
+    
+  </div>
+  <div>
+    <button mat-raised-button color="primary" disabled="{{isRefreshingToken}}" (click)="refreshToken()" matTooltip="Gets a new token from the server and updates payment form with it">Refresh Payment Token</button>
+    <hr />
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Access Token" required  [(ngModel)]="accessToken">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Currency Code"  type="number" required [(ngModel)]="currencyCode">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Amount" type="number" required [(ngModel)]="amount">
+      </mat-form-field>
+    </div>
+    
+    <button mat-raised-button color="primary" disabled="{{isRefreshingToken}}" (click)="manuallyUpdateToken()" matTooltip="Update the payment form with the token details above. Note these values are not validated to allow testing">Manually Update Payment Token</button>
+  </div>
+</div>

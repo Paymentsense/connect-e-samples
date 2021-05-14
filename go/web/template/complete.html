@@ -1,0 +1,95 @@
+<!--complete.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <div class="demo1">
+        <h1>Standard Demo Payment Complete</h1>
+        <div class="row">
+            <div class="col-md-6 text-centre">
+                Payment Info
+                <dl>
+                    <dt>Status Code</dt>
+                    <dd id="statusCode">{{.StatusCode}}</dd>
+                    <dt>Auth Code</dt>
+                    <dd id="authCode">{{.AuthCode}}</dd>
+                    <dt>Message</dt>
+                    <dd id="message">{{.Message}}</dd>
+                    <dt>Cross Reference</dt>
+                    <dd id="crossReference">{{.CrossReference}}</dd>
+                    <dt>Card Type</dt>
+                    <dd id="cardType">{{.CardType}}</dd>
+                    <dt>CardName</dt>
+                    <dd id="cardName">{{.CardName}}</dd>
+                    <dt>Card Number</dt>
+                    <dd id="cardNumber">{{.CardNumber}}</dd>
+                    <dt>Expiry Date</dt>
+                    <dd id="expiryDate">{{.ExpiryDate}}</dd>
+                </dl>
+                <a class="float-right" id="recurringLink" href="/recurring?crossReference={{.CrossReference}}">Try a
+                    recurring payment from this transaction</a>
+                <a id="demoLink" href="/">Try another test payment</a>
+            </div>
+        </div>
+
+        <br/>
+
+        <div>
+            <h5>Refund</h5>
+
+            <form method="post" id="refundForm" action="/refund" target="_self">
+                <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
+                <input type="hidden" value="REFUND" name="transactionType"/>
+                <input type="number" id="amount" name="amount"/>
+                <input type="submit" id="refund" value="Refund" class="btn btn-primary"/>
+            </form>
+        </div>
+
+        <br/>
+
+        <div>
+            <h5>Reversal</h5>
+
+            <form method="post" id="reversalForm" action="/refund" target="_self">
+                <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
+                <input type="hidden" value="VOID" name="transactionType"/>
+                <input type="submit" id="reversal" value="Reverse" class="btn btn-primary"/>
+            </form>
+        </div>
+
+        <br/>
+        
+        <div>
+            <h5>Collection</h5>
+            <div>
+                <form method="post" id="collectForm" action="/refund" target="_self">
+                    <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
+                    <input type="hidden" value="COLLECTION" name="transactionType"/>
+                    <input type="submit" id="colletion" value="Collect" class="btn btn-primary"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let link = document.getElementById("demoLink");
+    link.setAttribute("href", "/" + window.location.search);
+
+    let recurringLink = document.getElementById("recurringLink");
+    let href = recurringLink.getAttribute("href");
+    recurringLink.setAttribute("href", href + "&" + location.search.replace("?", ""));
+
+    let refundForm = document.getElementById("refundForm");
+    refundForm.setAttribute("action", "/refund" + window.location.search);
+
+    let reversalForm = document.getElementById("reversalForm");
+    reversalForm.setAttribute("action", "/refund" + window.location.search);
+
+    let collectForm = document.getElementById("collectForm");
+    collectForm.setAttribute("action", "/refund" + window.location.search);
+</script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

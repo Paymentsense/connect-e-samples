@@ -1,0 +1,29 @@
+<!--refund-complete.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <div class="demo1">
+        <h1>Refund Complete</h1>
+        <div>
+            <dl>
+                <dt>Status Code</dt>
+                <dd id="statusCode">{{.StatusCode}}</dd>
+                <dt>Auth Code</dt>
+                <dd id="authCode">{{.AuthCode}}</dd>
+                <dt>Message</dt>
+                <dd id="message">{{.Message}}</dd>
+            </dl>
+            <a id="demoLink" href="/">Try another test payment</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    let link = document.getElementById("demoLink");
+    link.setAttribute("href", "/" + window.location.search);
+</script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

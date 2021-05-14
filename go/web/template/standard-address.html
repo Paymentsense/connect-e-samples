@@ -1,0 +1,263 @@
+<!--standard-address.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <div class="demo1">
+        <h1>Standard with Address Demo Payment</h1>
+        <form id="testForm" novalidate>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Billing Address</h4>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                            placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="address1">Address line 1</label>
+                        <input type="text" class="form-control" id="address1" aria-describedby="address1"
+                            placeholder="Address line 1" required
+                            data-validation-message="Please enter address line 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="address2">Address line 2</label>
+                        <input type="text" class="form-control" id="address2" aria-describedby="address2"
+                            placeholder="Address line 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="address3">Address line 3</label>
+                        <input type="text" class="form-control" id="address3" aria-describedby="address3"
+                            placeholder="Address line 3">
+                    </div>
+                    <div class="form-group">
+                        <label for="address4">Address line 4</label>
+                        <input type="text" class="form-control" id="address4" aria-describedby="address4"
+                            placeholder="Address line 4">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" aria-describedby="city" placeholder="City">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State/County</label>
+                        <input type="text" class="form-control" id="state" aria-describedby="state" placeholder="State">
+                    </div>
+                    <div class="form-group">
+                        <label for="postcode">Postcode</label>
+                        <input type="text" class="form-control" id="postcode" aria-describedby="postcode"
+                            placeholder="Postcode" required data-validation-message="Please enter the postcode">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+
+                        <select id="country" class="form-control"  name="connectCountry" required title="Select a country" data-validation-message="Please select a country">
+                            <option  disabled value="" selected hidden>Select a country</option>
+                            <option value="036">Australia</option>
+                            <option value="250">France</option>
+                            <option value="554">New Zealand</option>
+                            <option value="826">United Kingdom</option>
+                            <option value="840">United States</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Card Details</h4>
+                    <div id="demo"></div>
+                </div>
+                <div class="col-12">
+                    <div id="errors"></div>
+                    <div class="text-right">
+                        <button id="payBtn" type="submit" class="btn btn-primary pull-right">Pay</button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{.HostBaseURL}}/assets/js/client.js" asp-append-version="true"></script>
+<script>
+    var config = {
+        paymentDetails: {
+            amount: "{{.Amount}}",
+            currencyCode: "{{.CurrencyCode}}",
+            paymentToken: "{{.ID}}"
+        },
+        containerId: "demo",
+        fontCss: ['https://fonts.googleapis.com/css?family=Do+Hyeon'],
+        styles: {
+            base: {
+                default: {
+                    color: "black",
+                    textDecoration: "none",
+                    fontFamily: "'Do Hyeon', sans-serif",
+                    boxSizing: "border-box",
+                    padding: ".375rem .75rem",
+                    boxShadow: 'none',
+                    fontSize: '1rem',
+                    borderRadius: '.25rem',
+                    lineHeight: '1.5',
+                    backgroundColor: '#fff',
+                    margin: "0"
+                },
+                focus: {
+                    color: '#495057',
+                    backgroundColor: '#fff',
+                    borderColor: '#80bdff',
+                    outline: '0',
+                    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
+                },
+                error: {
+                    color: "#B00",
+                    borderColor: "#B00"
+                },
+                valid: {
+                    color: "green"
+                },
+                container: {
+                    marginBottom: '1rem'
+                },
+                label: {
+                    fontFamily: "'Do Hyeon', sans-serif",
+                    marginBottom: '.5rem',
+                    display: 'inline-block',
+                    lineHeight: "24px"
+                }
+            },
+            cv2: {
+                container: {
+                    width: "50%",
+                    float: "left",
+                    paddingLeft: "5px",
+                    boxSizing: "border-box"
+                },
+            },
+            expiryDate: {
+                container: {
+                    width: "50%",
+                    float: "left",
+                    paddingRight: "5px",
+                    boxSizing: "border-box"
+                },
+
+            },
+            cardIcon: {
+                bottom: "8px"
+            }
+        },
+        text: {
+            cv2: {
+                label: "CVV",
+                placeholder: "CVV"
+            },
+            cardNumber: {
+                label: "Card",
+                placeholder: "Card"
+            },
+            expiryDate: {
+                label: "Expiry",
+                placeholder: "Expiry"
+            }
+        }
+    };
+
+    var connectE = new Connect.ConnectE(config, displayErrors, onPaymentFormSubmit);
+    var form = document.getElementById("testForm");
+    
+    form.onsubmit = function (evnt) {
+        evnt.stopPropagation();
+
+        var inputs = document.getElementsByClassName("form-control");
+        for (var i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
+            input.classList.add("touched")
+        }
+        connectE.validate();
+        if (getLocalErrors().length == 0) {
+            var loader = document.createElement("div");
+            loader.id = "loader";
+            document.body.appendChild(loader);
+
+            var countrySelect = document.getElementById("country");
+            var countryOption = countrySelect[countrySelect.selectedIndex];
+            var country = countryOption && countryOption.value;
+            var address = {
+                address1: document.getElementById("address1").value,
+                address2: document.getElementById("address2").value,
+                address3: document.getElementById("address3").value,
+                address4: document.getElementById("address4").value,
+                city: document.getElementById("city").value,
+                state: document.getElementById("state").value,
+                postcode: document.getElementById("postcode").value,
+                countryCode: country
+            };
+
+            var extraInfo = {
+                userEmailAddress: document.getElementById("exampleInputEmail1").value,
+                billingAddress: address
+            };
+
+            connectE.executePayment(extraInfo)
+                    .then(function (data) {
+                        window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
+                    })
+                    .catch(function (data) {
+                                document.getElementById("loader").remove();
+                                console.log('Payment Request failed: ' + data);
+                            }
+                    );
+        }
+
+
+        return false
+    };
+
+    var inputs = document.getElementsByClassName("form-control");
+    for (var i = 0; i < inputs.length; i++) {
+        var input = inputs[i];
+        input.onblur = function (e) {
+            this.classList.add("touched");
+            displayErrors([])
+        };
+    }
+
+
+    function getLocalErrors() {
+        var inputs = document.getElementsByClassName("form-control");
+
+        var errors = [];
+        for (var i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
+            if (!input.checkValidity() && input.classList.contains("touched")) {
+                errors.push({message: input.getAttribute("data-validation-message")});
+            }
+        }
+        return errors;
+    }
+
+    function displayErrors(errors) {
+        var allErrors = errors.concat(getLocalErrors());
+        var errorsDiv = document.getElementById('errors');
+        errorsDiv.innerHTML = '';
+        if (allErrors && allErrors.length) {
+            var list = document.createElement("ul");
+            allErrors.forEach(function (error) {
+                var item = document.createElement("li");
+                item.innerText = error.message;
+                list.appendChild(item);
+            });
+            errorsDiv.appendChild(list);
+        }
+
+
+    }
+
+    function onPaymentFormSubmit(evnt) {
+        form.onsubmit(evnt);
+    }
+</script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

@@ -1,0 +1,36 @@
+<!--checkout.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <div class="demo1">
+        <h1>Checkout Demo Payment</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <form id="testForm" action="/checkout-complete" method="post">
+                    <div>Amount: 1.00 GBP</div>
+                    <script src="{{.HostBaseURL}}/assets/js/checkout.js"
+                            data-amount="{{.Amount}}"
+                            data-access-token="{{.ID}}"
+                            data-currency-code="{{.CurrencyCode}}"
+                            data-display-address="true"
+                            data-display-email="true"
+                            data-description="Demo Payment of 1.00 GBP"
+                            data-button-text="Start Payment"
+                            data-submit-button-text="Pay 1.00 GBP"
+                            class="connect-checkout-btn">
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var form = document.getElementById("testForm");
+    form.setAttribute("action", "/checkout-complete" + window.location.search);
+</script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

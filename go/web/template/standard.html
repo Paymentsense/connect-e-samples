@@ -1,0 +1,155 @@
+<!--standard.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <div class="demo1">
+        <h1>Standard Demo Payment</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <form id="testForm">
+                    <div class="form-group">
+                        <label for="exampleName">Name</label>
+                        <input type="text" class="form-control" id="exampleName" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    </div>
+                    <div id="demo"></div>
+
+                    <div class="text-danger" id="errors"></div>
+                    <div class="text-danger" id="paymentErrors"></div>
+                    <button id="payBtn" type="submit" class="btn btn-primary">Pay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{.HostBaseURL}}/assets/js/client.js" ></script>
+<script>
+    var config = {
+        paymentDetails: {
+            amount: "{{.Amount}}",
+            currencyCode: "{{.CurrencyCode}}",
+            paymentToken: "{{.ID}}"
+        },
+        containerId: "demo",
+        fontCss: ['https://fonts.googleapis.com/css?family=Do+Hyeon'],
+        styles: {
+            base: {
+                default: {
+                    color: "black",
+                    textDecoration: "none",
+                    fontFamily: "'Do Hyeon', sans-serif",
+                    boxSizing: "border-box",
+                    padding: ".375rem .75rem",
+                    boxShadow: 'none',
+                    fontSize: '1rem',
+                    borderRadius: '.25rem',
+                    lineHeight: '1.5',
+                    backgroundColor: '#fff'
+                },
+                focus: {
+                    color: '#495057',
+                    backgroundColor: '#fff',
+                    borderColor: '#80bdff',
+                    outline: '0',
+                    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
+                },
+                error: {
+                    color: "#B00",
+                    borderColor: "#B00"
+                },
+                valid: {
+                    color: "green"
+                },
+                container: {
+                    marginBottom: '1rem'
+                },
+                label: {
+                    fontFamily: "'Do Hyeon', sans-serif",
+                    marginBottom: '.5rem',
+                    display: 'inline-block'
+                }
+            },
+            cv2: {
+                container: {
+                    width: "50%",
+                    float: "left",
+                    paddingLeft: "5px",
+                    boxSizing: "border-box"
+                },
+            },
+            expiryDate: {
+                container: {
+                    width: "50%",
+                    float: "left",
+                    paddingRight: "5px",
+                    boxSizing: "border-box"
+                },
+
+            },
+
+        },
+        text: {
+            cv2: {
+                label: "CVV",
+                placeholder: "CVV"
+            },
+            cardNumber: {
+                label: "Card",
+                placeholder: "Card"
+            },
+            expiryDate: {
+                label: "Expiry",
+                placeholder: "Expiry"
+            }
+        }
+    };
+
+    var connectE = new Connect.ConnectE(config, displayErrors);
+    var form = document.getElementById("testForm");
+    
+    form.onsubmit = function(evnt) {
+        evnt.stopPropagation();
+        var loader = document.createElement("div");
+        loader.id = "loader";
+        document.body.appendChild(loader);
+        var errors = document.getElementById("paymentErrors");
+        errors.innerText = '';
+        connectE.executePayment()
+        .then(function(data) {
+            window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
+        })
+        .catch(function(data) {
+            console.log(data);
+            document.getElementById("loader").remove();
+            if(typeof data.message === "string" ){
+                errors.innerText = 'Payment failed: ' + data.message;
+            }
+
+        });
+        return false;
+    }
+
+    function displayErrors(errors) {
+        console.log(errors)
+        var errorsDiv = document.getElementById('errors');
+        errorsDiv.innerHTML = '';
+        if (errors && errors.length) {
+            var list = document.createElement("ul");
+            errors.forEach(function(error) {
+                var item = document.createElement("li");
+                item.innerText = error.message;
+                list.appendChild(item);
+            });
+            errorsDiv.appendChild(list);
+        }
+    }
+</script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}
