@@ -45,6 +45,7 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	r.GET("/health-check", func(c *gin.Context) {
 		c.String(http.StatusOK, "%s", "Ok")
 	})
+	r.GET("/angular", e.angular)
 	r.Static("/angular", relativePath+"web/app")
 
 	api := r.Group("/api")
@@ -172,6 +173,18 @@ func (e Endpoint) listWebhooks(c *gin.Context) {
 	}
 
 	c.Data(http.StatusOK, "application/json", writer)
+}
+
+func (e Endpoint) angular(c *gin.Context) {
+	e.addHeaders(c.Writer)
+
+	m := struct {
+		HostBaseURL string `json:"hostBaseUrl" form:"hostBaseUrl"`
+	}{
+		HostBaseURL: getWebHostURL(),
+	}
+
+	c.HTML(http.StatusOK, "index.html", m)
 }
 
 func (e Endpoint) accessToken(c *gin.Context) {

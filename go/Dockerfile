@@ -4,10 +4,10 @@ WORKDIR /go/src/app
 
 COPY angular .
 
-ARG ENV
+ARG ENV=production
 
 RUN npm install --silent
-RUN node_modules/.bin/ng build --configuration=$ENV
+RUN node_modules/.bin/ng build -c $ENV
 
 FROM golang:1.15-alpine as builder2
 

@@ -38,10 +38,7 @@ WEBHOOK_URL: PUT HERE THE WEBHOOK URL
 version: "3.8"
 services:
   demo:
-    build:
-      context: .
-      args:
-        ENV: ENV NAME (production, test)
+    build: .
     ports:
       - "8080:8080"
     environment:
