@@ -34,42 +34,46 @@
         </div>
 
         <br/>
-
-        <div>
-            <h5>Refund</h5>
-
-            <form method="post" id="refundForm" action="/refund" target="_self">
-                <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
-                <input type="hidden" value="REFUND" name="transactionType"/>
-                <input type="number" id="amount" name="amount"/>
-                <input type="submit" id="refund" value="Refund" class="btn btn-primary"/>
-            </form>
-        </div>
-
-        <br/>
-
-        <div>
-            <h5>Reversal</h5>
-
-            <form method="post" id="reversalForm" action="/refund" target="_self">
-                <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
-                <input type="hidden" value="VOID" name="transactionType"/>
-                <input type="submit" id="reversal" value="Reverse" class="btn btn-primary"/>
-            </form>
-        </div>
-
-        <br/>
         
-        <div>
-            <h5>Collection</h5>
-            <div>
-                <form method="post" id="collectForm" action="/refund" target="_self">
-                    <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
-                    <input type="hidden" value="COLLECTION" name="transactionType"/>
-                    <input type="submit" id="colletion" value="Collect" class="btn btn-primary"/>
-                </form>
-            </div>
-        </div>
+        {{ if .AuthCode }}
+            <table>
+                <tr>
+                    <td>
+                        <h5>Refund</h5>
+
+                        <form method="post" id="refundForm" action="/refund" target="_self">
+                            <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
+                            <input type="hidden" value="REFUND" name="transactionType"/>
+                            <input type="number" id="amount" name="amount"/>
+                            <input type="submit" id="refund" value="Refund" class="btn btn-primary"/>
+                        </form>
+                    </td>
+
+                    <td>
+                        <h5>Reversal</h5>
+
+                        <form method="post" id="reversalForm" action="/refund" target="_self">
+                            <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
+                            <input type="hidden" value="VOID" name="transactionType"/>
+                            <input type="submit" id="reversal" value="Reverse" class="btn btn-primary"/>
+                        </form>
+                    </td>
+
+                    <td>
+                        <h5>Collection</h5>
+
+                        <div>
+                            <form method="post" id="collectForm" action="/refund" target="_self">
+                                <input type="hidden" value="{{.CrossReference}}" name="crossReference"/>
+                                <input type="hidden" value="COLLECTION" name="transactionType"/>
+                                <input type="number" id="amount" name="amount"/>
+                                <input type="submit" id="colletion" value="Collect" class="btn btn-primary"/>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        {{end}}
     </div>
 </div>
 
