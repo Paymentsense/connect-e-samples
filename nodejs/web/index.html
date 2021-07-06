@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>@connect-e-samples/nodejs</title>
+  <meta name="description"
+    content="Connect-e Sample providing example of how to get started integrating with connect-e.">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://web.e.test.connect.paymentsense.cloud/assets/js/client.js"></script>
+  <style>
+    #demo-payment iframe {
+      width: 100%;
+    }
+
+    #demo-result,
+    #demo-payment,
+    #recurring-demo-payment,
+    #recurring-payment {
+      padding: 5px;
+    }
+
+    #errors li {
+      color: #B00;
+    }
+
+    iframe.threeDs {
+      width: 370px;
+      height: 366px;
+      margin: 100px 0 0 -175px;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="demo-payment"></div>
+  <div id="errors"></div>
+  <button id="testPay" class="btn-primary btn pull-right" data-loading-text="Processing...">Pay</button>
+  <div id="demo-result" style="display: none">
+    <h5>Payment Complete</h5>
+    <dl>
+      <dt>Status Code</dt>
+      <dd id="status-code"></dd>
+      <dt>Auth Code</dt>
+      <dd id="auth-code"></dd>
+    </dl>
+  </div>
+  <script src="connect-e.js"></script>
+</body>
+
+</html>
