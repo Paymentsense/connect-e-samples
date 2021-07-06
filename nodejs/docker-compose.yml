@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  demo:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+        CONNECT_E_KEY: CONNECT_E_KEY_UNDEFINED
+        API_URL: https://e.test.connect.paymentsense.cloud/v1
+        WEB_URL: https://web.e.test.connect.paymentsense.cloud
+        MERCHANT_URL: MERCHANT_URL_UNDEFINED
+        GATEWAY_USERNAME: GATEWAY_USERNAME_UNDEFINED
+        GATEWAY_PASSWORD: GATEWAY_PASSWORD_UNDEFINED
+        WEBHOOK_URL: WEBHOOK_URL_UNDEFINED

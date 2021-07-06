@@ -1,0 +1,40 @@
+{
+  "name": "@connect-e-samples/nodejs",
+  "version": "0.0.1",
+  "description": "Connect-e Sample providing example of how to get started integrating with connect-e.",
+  "main": "index.js",
+  "scripts": {
+    "start": "export $(cat .env-test | xargs) && node src/index.js",
+    "lint": "yarn run eslint --config .eslintrc.js src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com:Paymentsense/connect-e-samples.git"
+  },
+  "keywords": [
+    "connect-e",
+    "connect-e-samples",
+    "connect-e-samples/nodejs"
+  ],
+  "homepage": "https://github.com/Paymentsense/connect-e-samples/nodejs#readme",
+  "author": "Paymentsense",
+  "bugs": {
+    "url": "https://github.com/Paymentsense/connect-e-samples/issues"
+  },
+  "license": "ISC",
+  "private": false,
+  "dependencies": {
+    "express": "4.17.1",
+    "lodash": "4.17.21",
+    "morgan": "1.10.0",
+    "node-fetch": "2.6.1",
+    "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.11",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.2"
+  }
+}
