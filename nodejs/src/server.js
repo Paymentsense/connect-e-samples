@@ -20,7 +20,7 @@ class Server {
     app.use(morgan('dev'))
     app.use('/', express.static('./web'));
 
-    app.get('/payment-config', async (req, res) => {
+    app.get('/payment-config', async (req, res, next) => {
       const accessToken = new AccessToken(this.envs);
       try {
         const accessTokenResponse = await accessToken.fetch();
@@ -31,7 +31,10 @@ class Server {
         };
         res.send(paymentConfig);
       } catch (error) {
-        throw error;
+        // Instance of `AccessTokenResponseError`.
+        res.setHeader('Content-Type', 'application/json');
+        res.status(error.status);
+        res.send(JSON.stringify(error));
       }
     });
 

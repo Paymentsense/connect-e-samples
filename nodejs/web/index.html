@@ -41,21 +41,49 @@
       left: 50%;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
     }
+
+    .bordered {
+      border: solid 1px #BBB;
+      border-radius: 0.25rem;
+      padding: 0.375rem 0.75rem;
+    }
+
+    body {
+      margin: 5px;
+    }
   </style>
 </head>
 
 <body>
-  <div id="demo-payment"></div>
-  <div id="errors"></div>
-  <button id="testPay" class="btn-primary btn pull-right" data-loading-text="Processing...">Pay</button>
-  <div id="demo-result" style="display: none">
-    <h5>Payment Complete</h5>
-    <dl>
-      <dt>Status Code</dt>
-      <dd id="status-code"></dd>
-      <dt>Auth Code</dt>
-      <dd id="auth-code"></dd>
-    </dl>
+  <h3 class="page-title">@connect-e-samples/nodejs</h3>
+  <hr />
+  <div id="demo-payment" class="bordered"></div>
+  <hr />
+  <div class="bordered">
+    <button id="testPay" class="btn-primary btn pull-right" data-loading-text="Processing...">Pay</button>
+  </div>
+  <hr />
+  <div class="bordered">
+    <span><b>Errors:</b></span>
+    <div id="errors"></div>
+  </div>
+  <hr />
+  <div class="bordered">
+    <span><b>Result:</b></span>
+    <div id="demo-result" style="display: none">
+      <h5>Payment Complete</h5>
+      <dl>
+        <dt>Status Code</dt>
+        <dd id="status-code"></dd>
+        <dt>Auth Code</dt>
+        <dd id="auth-code"></dd>
+      </dl>
+    </div>
+  </div>
+  <hr />
+  <div class="bordered">
+    <span><b>Debug:</b></span>
+    <div id="debug"></div>
   </div>
   <script src="connect-e.js"></script>
 </body>

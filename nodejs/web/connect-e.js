@@ -1,6 +1,24 @@
+function displayErrors(errors) {
+  var errorsDiv = document.getElementById('errors');
+  errorsDiv.innerHTML = '';
+  if (errors && errors.length) {
+    var list = document.createElement("ul");
+    errors.forEach(function (error) {
+      var item = document.createElement("li");
+      item.innerText = error.message;
+      list.appendChild(item);
+    });
+    errorsDiv.appendChild(list);
+  }
+}
+
 fetch('/payment-config').then((response) => {
   return response.json();
 }).then((data) => {
+  if (data.status >= 400) {
+    throw data;
+  }
+
   console.log("/payment-config: data", data);
 
   // {
@@ -104,19 +122,10 @@ fetch('/payment-config').then((response) => {
       });
   });
 
-  function displayErrors(errors) {
-    var errorsDiv = document.getElementById('errors');
-    errorsDiv.innerHTML = '';
-    if (errors && errors.length) {
-      var list = document.createElement("ul");
-      errors.forEach(function (error) {
-        var item = document.createElement("li");
-        item.innerText = error.message;
-        list.appendChild(item);
-      });
-      errorsDiv.appendChild(list);
-    }
-  }
-
   return data;
+}).catch((error) => {
+  console.log("/payment-config: error", JSON.stringify(error));
+  displayErrors([
+    error,
+  ]);
 });

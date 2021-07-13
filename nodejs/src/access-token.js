@@ -10,37 +10,40 @@ class AccessToken {
     const url = this.accessTokenUrl();
     const accessTokenRequest = new AccessTokenRequestBody(this.envs);
     const authorization = `Bearer ${this.envs.CONNECT_E_KEY}`
+    const headers = {
+      'Authorization': authorization,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+    const body = accessTokenRequest.stringify();
 
     return fetch(url, {
       // withCredentials: true,
       // credentials: 'include',
       method: 'POST',
-      headers: {
-        'Authorization': authorization,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: accessTokenRequest.stringify(),
+      headers,
+      body,
     }).then((response) => {
+      // console.info("INFO: AccessToken.fetch.then", url, response.status, response.statusText);
       if (response.status >= 400) {
-        console.error("ERROR: AccessToken.fetch - bad status code, response", new Error(response));
-        // TODO: Wrap error into AccessTokenResponseError.
-        throw new Error("ERROR: AccessToken.fetch - bad status code, response", response);
+        const error = new AccessTokenResponseError(url, response.status, response.statusText);
+        console.error("ERROR: AccessToken.fetch - headers", headers);
+        console.error("ERROR: AccessToken.fetch - body", body);
+        console.error("ERROR: AccessToken.fetch - error", error);
+        throw error;
       }
       return response.json();
     }).then((data) => {
       console.info("INFO: AccessToken.fetch - data", data);
       return new AccessTokenResponse(data.id, data.expiresAt);
     }).catch((error) => {
-      console.error("ERROR: AccessToken.fetch - error", error);
-      // TODO: Wrap error into AccessTokenResponseError.
       throw error;
     });
   }
 
   accessTokenUrl() {
     const url = `https://${this.envs.API_URL}/v1/access-tokens`;
-    console.info("INFO: AccessToken.url - url", url);
+    // console.info("INFO: AccessToken.url - url", url);
     return url;
   }
 }
@@ -72,9 +75,8 @@ class AccessToken {
 // }
 class AccessTokenRequestBody {
   constructor(envs) {
-    this.envs = envs;
-    this.gatewayUsername = this.envs.GATEWAY_USERNAME;
-    this.gatewayPassword = this.envs.GATEWAY_PASSWORD;
+    this.gatewayUsername = envs.GATEWAY_USERNAME;
+    this.gatewayPassword = envs.GATEWAY_PASSWORD;
     this.currencyCode = "826";
     this.amount = "100";
     this.transactionType = "SALE";
@@ -124,8 +126,11 @@ class AccessTokenResponse {
 // 401: Unauthorized - There is an issue authenticating the request.
 // 500: Internal Server Error - An error has occured while processing the request.
 class AccessTokenResponseError {
-  constructor(error) {
-    this.error = error;
+  constructor(url, status, statusText) {
+    this.url = url;
+    this.status = status;
+    this.statusText = statusText;
+    this.message = `${url}: ${status}, ${statusText}`;
   }
 }
 

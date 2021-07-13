@@ -18,9 +18,13 @@ IMAGE_NAME							= connect-e-samples/nodejs
 .PHONY: install run
 all: install run
 
+.PHONY: install-clean
+install-clean:
+	$(QUIET) rm -fvr node_modules || echo "No 'node_modules' to delete"
+	$(QUIET) yarn --no-bin-links --frozen-lockfile install
+
 .PHONY: install
 install:
-	$(QUIET) rm -fvr node_modules || echo "No 'node_modules' to delete"
 	$(QUIET) yarn --no-bin-links --frozen-lockfile install
 
 .PHONY: run

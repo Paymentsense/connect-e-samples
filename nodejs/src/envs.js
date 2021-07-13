@@ -38,12 +38,12 @@ class Envs {
     if (_.isNil(process.env.PORT) || _.isEmpty(process.env.PORT)) {
       console.info(`Environmental Variable 'PORT' not defined, defaulting to '${DEFAULT_PORT}'`)
     }
-    if (_.isNil(process.env.GATEWAY_USERNAME) || _.isEmpty(process.env.GATEWAY_USERNAME)) {
-      throw Error("Environmental Variable 'GATEWAY_USERNAME' not defined");
-    }
-    if (_.isNil(process.env.GATEWAY_PASSWORD) || _.isEmpty(process.env.GATEWAY_PASSWORD)) {
-      throw Error("Environmental Variable 'GATEWAY_PASSWORD' not defined");
-    }
+    // if (_.isNil(process.env.GATEWAY_USERNAME) || _.isEmpty(process.env.GATEWAY_USERNAME)) {
+    //   throw Error("Environmental Variable 'GATEWAY_USERNAME' not defined");
+    // }
+    // if (_.isNil(process.env.GATEWAY_PASSWORD) || _.isEmpty(process.env.GATEWAY_PASSWORD)) {
+    //   throw Error("Environmental Variable 'GATEWAY_PASSWORD' not defined");
+    // }
     if (_.isNil(process.env.MERCHANT_URL)) {
       throw Error("Environmental Variable 'MERCHANT_URL' not defined");
     }
@@ -57,7 +57,6 @@ class Envs {
       process.env.CONNECT_E_KEY,
       process.env.PORT || DEFAULT_PORT,
       process.env.GATEWAY_USERNAME,
-      process.env.GATEWAY_PASS,
       process.env.GATEWAY_PASSWORD,
       process.env.MERCHANT_URL,
       process.env.WEBHOOK_URL,
