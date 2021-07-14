@@ -18,14 +18,17 @@ IMAGE_NAME							= connect-e-samples/nodejs
 .PHONY: install run
 all: install run
 
+.PHONY: run-clean
+run-clean: install-clean run
+
 .PHONY: install-clean
 install-clean:
 	$(QUIET) rm -fvr node_modules || echo "No 'node_modules' to delete"
-	$(QUIET) yarn --no-bin-links --frozen-lockfile install
+	$(QUIET) yarn install --frozen-lockfile
 
 .PHONY: install
 install:
-	$(QUIET) yarn --no-bin-links --frozen-lockfile install
+	$(QUIET) yarn install --frozen-lockfile
 
 .PHONY: run
 run:
@@ -46,3 +49,7 @@ run-docker:
 		--interactive \
 		--publish 8080:8080 \
 		${IMAGE_NAME}:latest
+
+.PHONY: lint
+lint:
+	$(QUIET) yarn run lint

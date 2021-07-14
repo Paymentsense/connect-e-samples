@@ -4,8 +4,8 @@
   "description": "Connect-e Sample providing example of how to get started integrating with connect-e.",
   "main": "index.js",
   "scripts": {
-    "start": "export $(cat .env-test | xargs) && node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "export $(cat .env-test | xargs) && node src/index.js",
+    "lint": "yarn run eslint --config .eslintrc.js src"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,10 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.11"
+    "@types/node-fetch": "^2.5.11",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.2"
   }
 }

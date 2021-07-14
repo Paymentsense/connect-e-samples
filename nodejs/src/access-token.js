@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 
 class AccessToken {
@@ -7,90 +7,85 @@ class AccessToken {
   }
 
   async fetch() {
-    const url = this.accessTokenUrl();
-    const accessTokenRequest = new AccessTokenRequestBody(this.envs);
-    const authorization = `Bearer ${this.envs.CONNECT_E_KEY}`
-    const headers = {
-      'Authorization': authorization,
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-    const body = accessTokenRequest.stringify();
+    const req = new AccessTokenRequest(this.envs);
+    console.info(
+      'INFO: AccessToken.fetch - AccessTokenRequest',
+      req.url,
+      req.options,
+    );
 
-    return fetch(url, {
+    return fetch(req.url, req.options)
+      .then((response) => {
+        console.info(
+          'INFO: AccessToken.fetch - response',
+          req.url,
+          response.status,
+          response.statusText,
+        );
+        if (response.status >= 400) {
+          const error = new AccessTokenResponseError(
+            req.url,
+            response.status,
+            response.statusText,
+          );
+          throw error;
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.info('INFO: AccessToken.fetch - data', data);
+        return new AccessTokenResponse(data.id, data.expiresAt);
+      })
+      .catch((error) => {
+        console.error('ERROR: AccessToken.fetch - error', error);
+        throw error;
+      });
+  }
+}
+
+class AccessTokenRequest {
+  constructor(envs) {
+    this.gatewayUsername = envs.GATEWAY_USERNAME;
+    this.gatewayPassword = envs.GATEWAY_PASSWORD;
+    this.currencyCode = '826';
+    this.amount = '100';
+    this.transactionType = 'SALE';
+    this.orderId = uuidv4();
+    // this.orderId = "ORD00001";
+    this.merchantUrl = envs.MERCHANT_URL;
+
+    this.authorization = `Bearer ${envs.CONNECT_E_KEY}`;
+    this.url = `https://${envs.API_URL}/v1/access-tokens`;
+  }
+
+  get options() {
+    const headers = this.headers;
+    const body = this.body;
+    return {
       // withCredentials: true,
       // credentials: 'include',
       method: 'POST',
       headers,
       body,
-    }).then((response) => {
-      // console.info("INFO: AccessToken.fetch.then", url, response.status, response.statusText);
-      if (response.status >= 400) {
-        const error = new AccessTokenResponseError(url, response.status, response.statusText);
-        console.error("ERROR: AccessToken.fetch - headers", headers);
-        console.error("ERROR: AccessToken.fetch - body", body);
-        console.error("ERROR: AccessToken.fetch - error", error);
-        throw error;
-      }
-      return response.json();
-    }).then((data) => {
-      console.info("INFO: AccessToken.fetch - data", data);
-      return new AccessTokenResponse(data.id, data.expiresAt);
-    }).catch((error) => {
-      throw error;
-    });
+    };
   }
 
-  accessTokenUrl() {
-    const url = `https://${this.envs.API_URL}/v1/access-tokens`;
-    // console.info("INFO: AccessToken.url - url", url);
-    return url;
-  }
-}
-
-// AccessTokenRequestBody - Example:
-//
-// {
-//   "gatewayUsername": "YOUR_USER_NAME",
-//   "gatewayPassword": "YOUR_PASSWORD",
-//   "currencyCode": "826",
-//   "amount": "100",
-//   "transactionType": "SALE",
-//   "orderId": "ORD00001",
-//   "orderDescription": "Example description.",
-//   "userAgent": "string",
-//   "userEmailAddress": "user@exmaple.com",
-//   "userPhoneNumber": "55512345",
-//   "userIpAddress": "192.168.0.0.1",
-//   "userAddress1": "1 Example st",
-//   "userAddress2": "Angel",
-//   "userAddress3": "string",
-//   "userAddress4": "string",
-//   "userCity": "London",
-//   "userState": "string",
-//   "userPostcode": "N19PS",
-//   "userCountryCode": "826",
-//   "newTransaction": false,
-//   "crossReference": "1234567890ABC"
-// }
-class AccessTokenRequestBody {
-  constructor(envs) {
-    this.gatewayUsername = envs.GATEWAY_USERNAME;
-    this.gatewayPassword = envs.GATEWAY_PASSWORD;
-    this.currencyCode = "826";
-    this.amount = "100";
-    this.transactionType = "SALE";
-    this.orderId = uuidv4();
-    // this.orderId = "ORD00001";
+  get headers() {
+    return {
+      Authorization: this.authorization,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
   }
 
-  stringify() {
+  get body() {
     const gatewayUsername = this.gatewayUsername;
     const gatewayPassword = this.gatewayPassword;
     const currencyCode = this.currencyCode;
     const amount = this.amount;
     const transactionType = this.transactionType;
     const orderId = this.orderId;
+    const merchantUrl = this.merchantUrl;
 
     return JSON.stringify({
       gatewayUsername,
@@ -99,6 +94,7 @@ class AccessTokenRequestBody {
       amount,
       transactionType,
       orderId,
+      merchantUrl,
     });
   }
 }
