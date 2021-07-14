@@ -1,9 +1,10 @@
+const fetch = require('node-fetch');
 // https://expressjs.com/
 // https://expressjs.com/en/4x/api.html
 const express = require('express');
 // https://expressjs.com/en/resources/middleware/morgan.html
 const morgan = require('morgan');
-const AccessToken = require('./access-token');
+const { AccessToken, AccessTokenRequest } = require('./access-token');
 
 class Server {
   constructor(envs) {
@@ -29,7 +30,12 @@ class Server {
           amount: '100',
           currencyCode: '826',
           paymentToken: accessTokenResponse.paymentToken,
+          // orderId: accessTokenResponse.orderId,
         };
+        console.info(
+          '/payment-config - paymentConfig',
+          JSON.stringify(paymentConfig),
+        );
         res.send(paymentConfig);
       } catch (error) {
         // Instance of `AccessTokenResponseError`.
@@ -37,6 +43,48 @@ class Server {
         res.status(error.status);
         res.send(JSON.stringify(error));
       }
+    });
+
+    app.get('/payment-confirm/:id', async (req, res) => {
+      console.info('INFO: /payment-confirm/:id - req.params', req.params);
+
+      const accessTokenRequest = new AccessTokenRequest(this.envs);
+      const headers = accessTokenRequest.headers;
+      const id = req.params.id;
+      const url = `https://${this.envs.API_URL}/v1/payments/${id}`;
+
+      fetch(url, {
+        method: 'GET',
+        headers,
+      })
+        .then((response) => {
+          console.info(
+            'INFO: /payment-confirm/:id - response',
+            url,
+            response.status,
+            response.statusText,
+          );
+          if (response.status >= 400) {
+            return new Error(`${url} - failed`, JSON.stringify(response));
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.info(
+            'INFO: /payment-confirm/:id - data',
+            JSON.stringify(data),
+          );
+          res.send(data);
+          // return data;
+          // return new AccessTokenResponse(data.id, data.expiresAt);
+        })
+        .catch((error) => {
+          console.error('ERROR: /payment-confirm/:id - error', error);
+          res.setHeader('Content-Type', 'application/json');
+          res.status(error.status);
+          res.send(JSON.stringify(error));
+          // throw error;
+        });
     });
 
     app.get('/health-check', (req, res) => {

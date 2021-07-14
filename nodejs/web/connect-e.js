@@ -21,7 +21,7 @@ fetch('/payment-config')
       throw data;
     }
 
-    console.log('/payment-config: data', data);
+    console.log('/payment-config - data', data);
     const debugAccessTokenDiv = document.getElementById('debug-access-token');
     debugAccessTokenDiv.innerHTML = JSON.stringify(data);
 
@@ -31,6 +31,8 @@ fetch('/payment-config')
     //   paymentToken: 'paymentToken'
     // }
     const paymentDetails = data;
+    console.log('/payment-config - paymentDetails', paymentDetails);
+
     const config = {
       paymentDetails,
       containerId: 'demo-payment',
@@ -119,6 +121,31 @@ fetch('/payment-config')
             'debug-execute-payment',
           );
           debugExecutePaymentDiv.innerHTML = JSON.stringify(data);
+
+          console.info(
+            'INFO: connectE.executePayment - data',
+            JSON.stringify(data),
+          );
+
+          const id = paymentDetails.paymentToken;
+          const url = `/payment-confirm/${id}`;
+          fetch(url)
+            .then((response) => {
+              return response.json();
+            })
+            .then((response) => {
+              console.info(`${url} - data`, JSON.stringify(response));
+              const debugConfirmPaymentDiv = document.getElementById(
+                'debug-confirm-payment',
+              );
+              debugConfirmPaymentDiv.innerHTML = JSON.stringify(response);
+              return response;
+            })
+            .catch((error) => {
+              console.error(`${url} - error`, JSON.stringify(error));
+              // displayErrors([error]);
+              throw error;
+            });
         })
         .catch((data) => {
           const errors = JSON.stringify(data);

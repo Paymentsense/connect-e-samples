@@ -34,7 +34,7 @@ class AccessToken {
       })
       .then((data) => {
         console.info('INFO: AccessToken.fetch - data', data);
-        return new AccessTokenResponse(data.id, data.expiresAt);
+        return new AccessTokenResponse(data.id, data.expiresAt, req.orderId);
       })
       .catch((error) => {
         console.error('ERROR: AccessToken.fetch - error', error);
@@ -106,9 +106,10 @@ class AccessTokenRequest {
 //   "expiresAt": 1540457361
 // }
 class AccessTokenResponse {
-  constructor(id, expiresAt) {
+  constructor(id, expiresAt, orderId) {
     this.id = id;
     this.expiresAt = expiresAt;
+    this.orderId = orderId;
   }
 
   get paymentToken() {
@@ -130,4 +131,7 @@ class AccessTokenResponseError {
   }
 }
 
-module.exports = AccessToken;
+module.exports = {
+  AccessToken,
+  AccessTokenRequest,
+};
