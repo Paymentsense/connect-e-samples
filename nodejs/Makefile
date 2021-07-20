@@ -8,12 +8,12 @@ ifneq ($V,0)
 	VERBOSE_FLAG = -v
 endif
 
-.DEFAULT_GOAL						:= all
-MAKEFLAGS 							+= --environment-overrides --warn-undefined-variables
-# .ONESHELL:
-SHELL										:= bash
+.DEFAULT_GOAL := all
+MAKEFLAGS += --environment-overrides --warn-undefined-variables
 
-IMAGE_NAME							= connect-e-samples/nodejs
+SHELL := bash
+
+IMAGE_NAME = connect-e-samples/nodejs
 
 .PHONY: install run
 all: install run

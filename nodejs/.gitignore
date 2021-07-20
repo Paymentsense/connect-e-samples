@@ -120,5 +120,5 @@ dist
 .pnp.*
 ################################################################
 
-.env.*
-.env-*
+# Do NOT ignore .env file in this directory
+!.env

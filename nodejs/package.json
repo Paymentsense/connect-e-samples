@@ -4,7 +4,8 @@
   "description": "Connect-e Sample providing example of how to get started integrating with connect-e.",
   "main": "index.js",
   "scripts": {
-    "start": "export $(cat env | xargs) && node src/index.js",
+    "start": "node src/index.js",
+    "start-env": "export $(cat .env | xargs) && node src/index.js",
     "lint": "yarn run eslint --config .eslintrc.js src"
   },
   "repository": {

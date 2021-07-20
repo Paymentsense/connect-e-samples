@@ -1,0 +1,19 @@
+# editorconfig.org
+# https://editorconfig.org/
+
+# This is the project's root directory
+root = true
+
+[*]
+charset = utf-8
+end_of_line = LF
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[{Makefile,makefile,**.mk}]
+indent_style = tab
+indent_size = 2
+
+[{go.mod,go.sum,*.go}]
+indent_style = tab
+indent_size = 4
