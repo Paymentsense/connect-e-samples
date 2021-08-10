@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  connect-e-samples-nodejs:
+    container_name: connect-e-samples-nodejs
+    image: connect-e-samples/nodejs:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+        CONNECT_E_KEY: ${CONNECT_E_KEY}
+        API_URL: ${API_URL}
+        WEB_URL: ${WEB_URL}
+        PORT: ${PORT}
+        GATEWAY_USERNAME: ${GATEWAY_USERNAME}
+        GATEWAY_PASSWORD: ${GATEWAY_PASSWORD}
+        MERCHANT_URL: ${MERCHANT_URL}
+        WEBHOOK_URL: ${WEBHOOK_URL}
