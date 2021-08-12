@@ -10,12 +10,12 @@
             <div class="col-md-6">
                 <form id="testForm">
                     <div class="form-group">
-                        <label for="exampleName">Name</label>
-                        <input type="text" class="form-control" id="exampleName" placeholder="Enter name">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp" placeholder="Enter email">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <label for="exampleInputEmail1">Phone Number</label>
+                        <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp" placeholder="Enter phone number">
                     </div>
                     <div id="demo"></div>
 
@@ -120,7 +120,13 @@
         document.body.appendChild(loader);
         var errors = document.getElementById("paymentErrors");
         errors.innerText = '';
-        connectE.executePayment()
+
+        var extraInfo = {
+            userEmailAddress: document.getElementById("userEmailAddress").value,
+            userPhoneNumber: document.getElementById("userPhoneNumber").value,
+        };
+
+        connectE.executePayment(extraInfo)
         .then(function(data) {
             window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
         })
