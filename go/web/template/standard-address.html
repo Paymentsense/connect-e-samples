@@ -11,9 +11,13 @@
                 <div class="col-md-6">
                     <h4>Billing Address</h4>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        <label for="userEmailAddress">Email address</label>
+                        <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp"
                             placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="userPhoneNumber">Phone Number</label>
+                        <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp" placeholder="Enter phone number">
                     </div>
                     <div class="form-group">
                         <label for="address1">Address line 1</label>
@@ -195,7 +199,8 @@
             };
 
             var extraInfo = {
-                userEmailAddress: document.getElementById("exampleInputEmail1").value,
+                userEmailAddress: document.getElementById("userEmailAddress").value,
+                userPhoneNumber: document.getElementById("userPhoneNumber").value,
                 billingAddress: address
             };
 
