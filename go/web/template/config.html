@@ -1,0 +1,196 @@
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <div class="demo1">
+        <h2>Configure Payment</h2>
+        <form id="config-form">
+            <div class="form-group">
+                <label for="currencyCode">currencyCode</label>
+                <input type="number" class="form-control" id="currencyCode" name="currencyCode" placeholder="826">
+            </div>
+            <div class="form-group">
+                <label for="amount">amount</label>
+                <input type="number" class="form-control" id="amount" name="amount" placeholder="100">
+            </div>
+            <div class="form-group">
+                <label for="transactionType">transactionType</label>
+                <input type="text" class="form-control" id="transactionType" name="transactionType" placeholder="SALE">
+            </div>
+            <div class="form-group">
+                <label for="transactionSource">transactionSource</label>
+                <input type="text" class="form-control" id="transactionSource" name="transactionSource"
+                       placeholder="transactionSource">
+            </div>
+            <div class="form-group">
+                <label for="orderId">orderId</label>
+                <input type="text" class="form-control" id="orderId" name="orderId" placeholder="orderId">
+            </div>
+            <div class="form-group">
+                <label for="orderDescription">orderDescription</label>
+                <input type="text" class="form-control" id="orderDescription" name="orderDescription"
+                       placeholder="orderDescription">
+            </div>
+            <div class="form-group">
+                <label for="userAgent">userAgent</label>
+                <input type="text" class="form-control" id="userAgent" name="userAgent" placeholder="userAgent">
+            </div>
+            <div class="form-group">
+                <label for="userEmailAddress">userEmailAddress</label>
+                <input type="text" class="form-control" id="userEmailAddress" name="userEmailAddress"
+                       placeholder="userEmailAddress">
+            </div>
+            <div class="form-group">
+                <label for="userPhoneNumber">userPhoneNumber</label>
+                <input type="text" class="form-control" id="userPhoneNumber" name="userPhoneNumber"
+                       placeholder="userPhoneNumber">
+            </div>
+            <div class="form-group">
+                <label for="userIpAddress">userIpAddress</label>
+                <input type="text" class="form-control" id="userIpAddress" name="userIpAddress"
+                       placeholder="userIpAddress">
+            </div>
+            <div class="form-group">
+                <label for="gatewayUsername">gatewayUsername</label>
+                <input type="text" class="form-control" id="gatewayUsername" name="gatewayUsername"
+                       placeholder="gatewayUsername">
+            </div>
+            <div class="form-group">
+                <label for="gatewayPassword">gatewayPassword</label>
+                <input type="text" class="form-control" id="gatewayPassword" name="gatewayPassword"
+                       placeholder="gatewayPassword">
+            </div>
+            <div class="form-group">
+                <label for="userAddress1">userAddress1</label>
+                <input type="text" class="form-control" id="userAddress1" name="userAddress1"
+                       placeholder="userAddress1">
+            </div>
+            <div class="form-group">
+                <label for="userAddress2">userAddress2</label>
+                <input type="text" class="form-control" id="userAddress2" name="userAddress2"
+                       placeholder="userAddress2">
+            </div>
+            <div class="form-group">
+                <label for="userAddress3">userAddress3</label>
+                <input type="text" class="form-control" id="userAddress3" name="userAddress3"
+                       placeholder="userAddress3">
+            </div>
+            <div class="form-group">
+                <label for="userAddress4">userAddress4</label>
+                <input type="text" class="form-control" id="userAddress4" name="userAddress4"
+                       placeholder="userAddress4">
+            </div>
+            <div class="form-group">
+                <label for="userCity">userCity</label>
+                <input type="text" class="form-control" id="userCity" name="userCity" placeholder="userCity">
+            </div>
+            <div class="form-group">
+                <label for="userState">userState</label>
+                <input type="text" class="form-control" id="userState" name="userState" placeholder="userState">
+            </div>
+            <div class="form-group">
+                <label for="userPostcode">userPostcode</label>
+                <input type="text" class="form-control" id="userPostcode" name="userPostcode"
+                       placeholder="userPostcode">
+            </div>
+            <div class="form-group">
+                <label for="userCountryCode">userCountryCode</label>
+                <input type="text" class="form-control" id="userCountryCode" name="userCountryCode"
+                       placeholder="userCountryCode">
+            </div>
+            <div class="form-group">
+                <label for="hostBaseUrl">hostBaseUrl</label>
+                <input type="text" class="form-control" id="hostBaseUrl" name="hostBaseUrl" placeholder="hostBaseUrl">
+            </div>
+            <div class="form-group">
+                <label for="CrossReference">CrossReference</label>
+                <input type="text" class="form-control" id="crossReference" name="crossReference"
+                       placeholder="CrossReference">
+            </div>
+            <div class="form-group">
+                <label for="MerchantURL">MerchantURL</label>
+                <input type="text" class="form-control" id="merchantURL" name="merchantURL" placeholder="MerchantURL">
+            </div>
+            <div class="form-group">
+                <label for="WebhookURL">WebhookURL</label>
+                <input type="text" class="form-control" id="webhookURL" name="webhookURL" placeholder="WebhookURL">
+            </div>
+            <button id="checkout-btn" type="submit" class="btn btn-primary">Checkout</button>
+            <button id="standard-btn" type="submit" class="btn btn-primary">Standard</button>
+        </form>
+
+        <div class="row">
+            <div class="col-5">
+                <hr>
+            </div>
+            <div class="col text-center">
+                <i>or</i>
+            </div>
+            <div class="col-5">
+                <hr>
+            </div>
+        </div>
+
+        <h2>Enter Access Token</h2>
+        <form id="access-token-form">
+            <div class="form-group">
+                <label for="id">Access Token</label>
+                <input type="text" class="form-control" id="id" name="id" placeholder="Access Token">
+            </div>
+            <div class="form-group">
+                <label for="tkn-amount">Amount</label>
+                <input type="number" class="form-control" id="tkn-amount" name="amount" placeholder="Amount">
+            </div>
+            <div class="form-group">
+                <label for="tkn-currency-code">Currency Code</label>
+                <input type="number" class="form-control" id="tkn-currency-code" name="currencyCode"
+                       placeholder="Currency Code">
+            </div>
+
+            <button id="tkn-checkout-btn" type="submit" class="btn btn-primary">Checkout</button>
+            <button id="tkn-standard-btn" type="submit" class="btn btn-primary">Standard</button>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    const tknCheckoutBtn = document.getElementById("tkn-checkout-btn")
+    tknCheckoutBtn.onclick = () => {
+        location.href = "/checkout" + buildQuery("access-token-form");
+        return false
+    }
+
+    const tknStandardBtn = document.getElementById("tkn-standard-btn")
+    tknStandardBtn.onclick = () => {
+        location.href = "/" + buildQuery("access-token-form");
+        return false
+    }
+
+
+    const buildQuery = (formId) => {
+        let query = ""
+        const inputs = document.getElementById(formId).getElementsByTagName("input")
+        for (let input of inputs) {
+            if (input.value) {
+                query += `&${input.getAttribute("name")}=${encodeURIComponent(input.value)}`
+
+            }
+        }
+
+        return query.length ? "?" + query.substr(1) : query
+    }
+
+    const checkoutBtn = document.getElementById("checkout-btn")
+    checkoutBtn.onclick = () => {
+        location.href = "/checkout" + buildQuery("config-form")
+        return false;
+    }
+
+    const standardBtn = document.getElementById("standard-btn")
+    standardBtn.onclick = () => {
+        location.href = "/" + buildQuery("config-form")
+        return false;
+    }
+
+</script>
