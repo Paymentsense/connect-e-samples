@@ -233,10 +233,14 @@ func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
 	if err := c.Bind(&paymentToken); err != nil {
 		return paymentToken, err
 	}
+	
 	if paymentToken.ID != "" {
 		return paymentToken, nil
 	}
-	err := e.paymentService.createPaymentToken(getApiKey(c.Request), &paymentToken)
 
-	return paymentToken, err
+	if err := e.paymentService.createPaymentToken(getApiKey(c.Request), &paymentToken); err != nil {
+		return paymentToken, err
+	}
+
+	return paymentToken, nil
 }
