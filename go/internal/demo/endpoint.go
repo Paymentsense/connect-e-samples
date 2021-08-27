@@ -233,8 +233,10 @@ func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
 	if err := c.Bind(&paymentToken); err != nil {
 		return paymentToken, err
 	}
-	
+
 	if paymentToken.ID != "" {
+		paymentToken.AccessToken = paymentToken.ID
+		paymentToken.HostBaseURL = e.paymentService.webURL
 		return paymentToken, nil
 	}
 
