@@ -17,10 +17,10 @@
     "connect-e-samples",
     "connect-e-samples/nodejs"
   ],
-  "homepage": "https://github.com/Paymentsense/connect-e-samples/nodejs#readme",
+  "homepage": "https://github.com/paymentsense/connect-e-samples/nodejs#readme",
   "author": "Paymentsense",
   "bugs": {
-    "url": "https://github.com/Paymentsense/connect-e-samples/issues"
+    "url": "https://github.com/paymentsense/connect-e-samples/issues"
   },
   "license": "ISC",
   "private": false,

@@ -48,7 +48,9 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	})
 	r.GET("/angular", e.angular)
 	r.Static("/angular", relativePath+"web/app")
-
+	r.GET("/configure", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "config.html", nil)
+	})
 	api := r.Group("/api")
 	{
 		api.GET("/access-token", e.accessToken)
@@ -230,6 +232,12 @@ func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
 	paymentToken := paymentToken{}
 	if err := c.Bind(&paymentToken); err != nil {
 		return paymentToken, err
+	}
+
+	if paymentToken.ID != "" {
+		paymentToken.AccessToken = paymentToken.ID
+		paymentToken.HostBaseURL = e.paymentService.webURL
+		return paymentToken, nil
 	}
 
 	if err := e.paymentService.createPaymentToken(getApiKey(c.Request), &paymentToken); err != nil {
