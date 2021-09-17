@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Refund</title>
+        <title>Connect-e PHP sample project - Refund</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url("css/styles.css") }}">
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://web.e.test.connect.paymentsense.cloud/assets/js/client.js"></script>
         <script src="{{ url("js/pay_config.js") }}"></script>
         <script src="{{ url("js/sale.js") }}"></script>
@@ -32,6 +32,27 @@
     </head>
     <body>
         <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/sale">Sale</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/refund">Refund</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/subscription">Subscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pre-auth">PreAuth</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
             <h1>Refund</h1>
             <div id="sectionOrder">
                 <h2>Order</h2>
