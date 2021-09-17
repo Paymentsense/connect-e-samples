@@ -1,6 +1,6 @@
 {
-    "name": "danbelden/php-paymentsense-connecte",
-    "description": "PHP integration for PaymentSense Connect-E APIs",
+    "name": "paymentsense/connect-e-samples",
+    "description": "PHP sample project for PaymentSense Connect-E",
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
