@@ -1,12 +1,11 @@
 function processCollect() {
-    disableCollectFormInputs();
-    processCollectToken();
-}
+    clearErrorMessage();
 
-function disableCollectFormInputs() {
-    let btnCollect = document.getElementById("btnCollect")
+    let btnCollect = document.getElementById("btnCollect");
     btnCollect.disabled = true;
-    btnCollect.innerText = "Loading..."
+    btnCollect.innerText = "Loading...";
+
+    processCollectToken();
 }
 
 function processCollectToken() {
@@ -35,11 +34,18 @@ function processCollectTokenRequestStateChange(xhr) {
     }
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+
+        let btnCollect = document.getElementById("btnCollect");
+        btnCollect.disabled = false;
+        btnCollect.innerText = "Collect";
+
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.id === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
 
@@ -71,11 +77,13 @@ function processCollectConfirmPaymentRequestStateChange(xhr) {
     }
     if (xhr.status !== 200) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.statusCode === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     payment = response;

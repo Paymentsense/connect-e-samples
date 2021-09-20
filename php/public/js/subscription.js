@@ -1,12 +1,11 @@
 function processSubscription() {
-    disableSubscriptionFormInputs();
-    processSubscriptionToken();
-}
+    clearErrorMessage();
 
-function disableSubscriptionFormInputs() {
     let btnSubscription = document.getElementById("btnSubscription")
     btnSubscription.disabled = true;
     btnSubscription.innerText = "Loading..."
+
+    processSubscriptionToken();
 }
 
 function processSubscriptionToken() {
@@ -35,11 +34,18 @@ function processSubscriptionTokenRequestStateChange(xhr) {
     }
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+
+        let btnSubscription = document.getElementById("btnSubscription");
+        btnSubscription.disabled = false;
+        btnSubscription.innerText = "Subscription";
+
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.id === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
 
@@ -71,11 +77,13 @@ function processSubscriptionConfirmPaymentRequestStateChange(xhr) {
     }
     if (xhr.status !== 200) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.statusCode === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     payment = response;

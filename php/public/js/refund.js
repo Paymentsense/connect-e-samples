@@ -1,12 +1,11 @@
 function processRefund() {
-    disableRefundFormInputs();
-    processRefundToken();
-}
+    clearErrorMessage();
 
-function disableRefundFormInputs() {
-    let btnRefund = document.getElementById("btnRefund")
+    let btnRefund = document.getElementById("btnRefund");
     btnRefund.disabled = true;
     btnRefund.innerText = "Loading..."
+
+    processRefundToken();
 }
 
 function processRefundToken() {
@@ -35,11 +34,18 @@ function processRefundTokenRequestStateChange(xhr) {
     }
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+
+        let btnRefund = document.getElementById("btnRefund");
+        btnRefund.disabled = false;
+        btnRefund.innerText = "Refund";
+
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.id === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
 
@@ -71,11 +77,13 @@ function processRefundConfirmPaymentRequestStateChange(xhr) {
     }
     if (xhr.status !== 200) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.statusCode === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     payment = response;

@@ -2,7 +2,13 @@ let connectE;
 let payment;
 
 function processOrder(tokenCallback = function(response){}) {
+    clearErrorMessage();
+
     disableOrderFormInputs();
+    let btnOrder = document.getElementById("btnOrder");
+    btnOrder.disabled = true;
+    btnOrder.innerText = "Loading..."
+
     processPaymentToken(tokenCallback);
 }
 
@@ -10,10 +16,24 @@ function disableOrderFormInputs() {
     document.getElementById("inputAmount").setAttribute('readonly', "true");
     document.getElementById("inputOrderId").setAttribute('readonly', "true");
     document.getElementById("inputOrderDescription").setAttribute('readonly', "true");
+}
 
-    let btnOrder = document.getElementById("btnOrder")
-    btnOrder.disabled = true;
-    btnOrder.innerText = "Loading..."
+function enableOrderFormInputs() {
+    document.getElementById("inputAmount").removeAttribute('readonly');
+    document.getElementById("inputOrderId").removeAttribute('readonly');
+    document.getElementById("inputOrderDescription").removeAttribute('readonly');
+}
+
+function showErrorMessage(message) {
+    let errorMsg = document.getElementById("errorMsg");
+    errorMsg.classList.remove('hidden');
+    errorMsg.innerText = message;
+}
+
+function clearErrorMessage() {
+    let errorMsg = document.getElementById("errorMsg");
+    errorMsg.classList.add('hidden');
+    errorMsg.innerText = "";
 }
 
 function processPaymentToken(tokenCallback = function(response){}) {
@@ -41,11 +61,20 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
     }
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+
+        let btnOrder = document.getElementById("btnOrder");
+        btnOrder.disabled = false;
+        btnOrder.innerText = "Submit"
+
+        enableOrderFormInputs();
+        showErrorMessage("An api error occurred, please check console.log for details");
+
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.id === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
 
@@ -64,6 +93,8 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
 }
 
 function processPayment(confirmPaymentCallback = function (response) {}) {
+    clearErrorMessage();
+
     let btnPay = document.getElementById("btnPay")
     btnPay.disabled = true;
     btnPay.innerText = "Loading...";
@@ -88,9 +119,16 @@ function processPaymentSuccess(data, confirmPaymentCallback = function(response)
 }
 
 function processPaymentError(data) {
-    console.error('Payment request failed: ' + data);
-    btnTestPay.innerText = 'Pay';
-    btnTestPay.removeAttribute("disabled");
+    console.error('Payment request failed', data);
+
+    let errorMsg = document.getElementById("errorMsg");
+    errorMsg.classList.remove('hidden');
+    errorMsg.innerText = "An api error occurred, please check console.log for details";
+
+    let btnPay = document.getElementById("btnPay");
+    btnPay.disabled = false;
+    btnPay.innerText = "Pay";
+
     if (typeof data === 'string') {
         document.getElementById("errors").innerText = data;
     }
@@ -100,12 +138,15 @@ function processPaymentError(data) {
 }
 
 function processConfirmPayment(confirmPaymentCallback = function(response){}) {
+    clearErrorMessage();
+
     let id = payConfig.paymentDetails.paymentToken;
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/payments/' + id, true);
     xhr.onreadystatechange = function() {
         processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback);
     }
+
     xhr.send();
 }
 
@@ -115,11 +156,13 @@ function processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback = f
     }
     if (xhr.status !== 200) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     const response = JSON.parse(xhr.responseText);
     if (typeof response.crossReference === 'undefined') {
         console.error("unexpected api response", response);
+        showErrorMessage("An api error occurred, please check console.log for details");
         return;
     }
     payment = response;
