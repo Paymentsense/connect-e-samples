@@ -5,7 +5,7 @@ function processOrder(tokenCallback = function(response){}) {
     clearErrorMessage();
 
     disableOrderFormInputs();
-    let btnOrder = document.getElementById("btnOrder");
+    const btnOrder = document.getElementById("btnOrder");
     btnOrder.disabled = true;
     btnOrder.innerText = "Loading..."
 
@@ -25,31 +25,31 @@ function enableOrderFormInputs() {
 }
 
 function showErrorMessage(message) {
-    let errorMsg = document.getElementById("errorMsg");
+    const errorMsg = document.getElementById("errorMsg");
     errorMsg.classList.remove('hidden');
     errorMsg.innerText = message;
 }
 
 function clearErrorMessage() {
-    let errorMsg = document.getElementById("errorMsg");
+    const errorMsg = document.getElementById("errorMsg");
     errorMsg.classList.add('hidden');
     errorMsg.innerText = "";
 }
 
 function processPaymentToken(tokenCallback = function(response){}) {
-    let xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/access-tokens', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     xhr.onreadystatechange = function() {
         processPaymentTokenRequestStateChange(xhr, tokenCallback);
     }
 
-    let amount = document.getElementById("inputAmount").value;
-    let transactionType = document.getElementById("inputTransactionType").value;
-    let orderId = document.getElementById("inputOrderId").value;
-    let orderDescription = document.getElementById("inputOrderDescription").value;
+    const amount = document.getElementById("inputAmount").value;
+    const transactionType = document.getElementById("inputTransactionType").value;
+    const orderId = document.getElementById("inputOrderId").value;
+    const orderDescription = document.getElementById("inputOrderDescription").value;
 
-    let params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
+    const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription;
 
     xhr.send(params);
@@ -62,7 +62,7 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
 
-        let btnOrder = document.getElementById("btnOrder");
+        const btnOrder = document.getElementById("btnOrder");
         btnOrder.disabled = false;
         btnOrder.innerText = "Submit"
 
@@ -95,7 +95,7 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
 function processPayment(confirmPaymentCallback = function (response) {}) {
     clearErrorMessage();
 
-    let btnPay = document.getElementById("btnPay")
+    const btnPay = document.getElementById("btnPay")
     btnPay.disabled = true;
     btnPay.innerText = "Loading...";
 
@@ -121,11 +121,11 @@ function processPaymentSuccess(data, confirmPaymentCallback = function(response)
 function processPaymentError(data) {
     console.error('Payment request failed', data);
 
-    let errorMsg = document.getElementById("errorMsg");
+    const errorMsg = document.getElementById("errorMsg");
     errorMsg.classList.remove('hidden');
     errorMsg.innerText = "An api error occurred, please check console.log for details";
 
-    let btnPay = document.getElementById("btnPay");
+    const btnPay = document.getElementById("btnPay");
     btnPay.disabled = false;
     btnPay.innerText = "Pay";
 
@@ -140,8 +140,8 @@ function processPaymentError(data) {
 function processConfirmPayment(confirmPaymentCallback = function(response){}) {
     clearErrorMessage();
 
-    let id = payConfig.paymentDetails.paymentToken;
-    let xhr = new XMLHttpRequest();
+    const id = payConfig.paymentDetails.paymentToken;
+    const xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/payments/' + id, true);
     xhr.onreadystatechange = function() {
         processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback);
@@ -167,13 +167,13 @@ function processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback = f
     }
     payment = response;
     const transactionTable = document.getElementById("payResultTable");
-    for (let prop in response) {
+    for (const prop in response) {
         if (response.hasOwnProperty(prop)) {
-            let fieldCell = document.createElement('td');
+            const fieldCell = document.createElement('td');
             fieldCell.innerText = prop;
-            let valueCell = document.createElement('td');
+            const valueCell = document.createElement('td');
             valueCell.innerText = response[prop];
-            let tableRow = document.createElement('tr');
+            const tableRow = document.createElement('tr');
             tableRow.appendChild(fieldCell);
             tableRow.appendChild(valueCell);
             transactionTable.appendChild(tableRow);

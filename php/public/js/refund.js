@@ -1,7 +1,7 @@
 function processRefund() {
     clearErrorMessage();
 
-    let btnRefund = document.getElementById("btnRefund");
+    const btnRefund = document.getElementById("btnRefund");
     btnRefund.disabled = true;
     btnRefund.innerText = "Loading..."
 
@@ -9,20 +9,20 @@ function processRefund() {
 }
 
 function processRefundToken() {
-    let xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/access-tokens', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     xhr.onreadystatechange = function() {
         processRefundTokenRequestStateChange(xhr);
     }
 
-    let amount = document.getElementById("inputAmount").value;
-    let transactionType = document.getElementById("inputRefundTransactionType").value;
-    let orderId = document.getElementById("inputOrderId").value;
-    let orderDescription = document.getElementById("inputOrderDescription").value;
-    let crossReference = document.getElementById("inputRefundCrossReference").value
+    const amount = document.getElementById("inputAmount").value;
+    const transactionType = document.getElementById("inputRefundTransactionType").value;
+    const orderId = document.getElementById("inputOrderId").value;
+    const orderDescription = document.getElementById("inputOrderDescription").value;
+    const crossReference = document.getElementById("inputRefundCrossReference").value
 
-    let params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
+    const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription + "&crossReference=" + crossReference;
 
     xhr.send(params);
@@ -35,7 +35,7 @@ function processRefundTokenRequestStateChange(xhr) {
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
 
-        let btnRefund = document.getElementById("btnRefund");
+        const btnRefund = document.getElementById("btnRefund");
         btnRefund.disabled = false;
         btnRefund.innerText = "Refund";
 
@@ -58,15 +58,15 @@ function processRefundTokenRequestStateChange(xhr) {
 }
 
 function processRefundConfirmPayment() {
-    let id = payConfig.paymentDetails.paymentToken;
-    let xhr = new XMLHttpRequest();
+    const id = payConfig.paymentDetails.paymentToken;
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/cross-reference-payments/' + id, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     xhr.onreadystatechange = function() {
         processRefundConfirmPaymentRequestStateChange(xhr);
     }
 
-    let params = "crossReference=" + document.getElementById("inputRefundCrossReference").value;
+    const params = "crossReference=" + document.getElementById("inputRefundCrossReference").value;
 
     xhr.send(params);
 }
@@ -88,13 +88,13 @@ function processRefundConfirmPaymentRequestStateChange(xhr) {
     }
     payment = response;
     const transactionTable = document.getElementById("refundResultTable");
-    for (let prop in response) {
+    for (const prop in response) {
         if (response.hasOwnProperty(prop)) {
-            let fieldCell = document.createElement('td');
+            const fieldCell = document.createElement('td');
             fieldCell.innerText = prop;
-            let valueCell = document.createElement('td');
+            const valueCell = document.createElement('td');
             valueCell.innerText = response[prop];
-            let tableRow = document.createElement('tr');
+            const tableRow = document.createElement('tr');
             tableRow.appendChild(fieldCell);
             tableRow.appendChild(valueCell);
             transactionTable.appendChild(tableRow);
