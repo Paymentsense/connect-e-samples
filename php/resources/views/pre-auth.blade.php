@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'PreAuth &amp; Collect')
+@section('title', 'PreAuth & Collect')
 
 @section('stylesheets')
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -35,7 +35,7 @@
 @endsection
 
 @section('body')
-    <h1>PreAuth &amp;amp; Collect</h1>
+    <h1>PreAuth &#38; Collect</h1>
     @include('shared.error')
     @include('shared.order', ['transactionType' => 'PREAUTH'])
     @include('shared.card_help')
