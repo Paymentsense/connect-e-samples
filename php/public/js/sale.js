@@ -95,7 +95,7 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
 function processPayment(confirmPaymentCallback = function (response) {}) {
     clearErrorMessage();
 
-    const btnPay = document.getElementById("btnPay")
+    const btnPay = document.getElementById("btnPay");
     btnPay.disabled = true;
     btnPay.innerText = "Loading...";
 
