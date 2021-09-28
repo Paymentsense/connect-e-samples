@@ -32,7 +32,7 @@ install:
 
 .PHONY: run
 run:
-	$(QUIET) yarn start
+	$(QUIET) yarn start-env
 
 .PHONY: build-docker
 build-docker:

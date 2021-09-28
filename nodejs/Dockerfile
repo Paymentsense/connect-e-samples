@@ -5,4 +5,4 @@ COPY . .
 
 RUN yarn install --frozen-lockfile
 
-CMD ["yarn", "start"]
+CMD ["yarn", "start-env"]
