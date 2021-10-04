@@ -78,16 +78,7 @@ const styles = {
 
 const form = document.getElementById('txn-type-select-form');
 
-const buildXrefButton = (accessTokenData) => {
-  let elemId = '';
-  if (accessTokenData.transactionType == "REFUND") {
-    $('#refund').show();
-    elemId = 'refund-result';
-  } else {
-    $('#collection').show();
-    elemId = 'collection-result';
-  }
-
+const buildXrefButton = (accessTokenData, elemId) => {
   $('#xrefBtn').on('click', () => {
     $('#xrefBtn').prop('disabled', true);
     console.log("clicked " + accessTokenData.transactionType + " button");
@@ -208,7 +199,8 @@ form.addEventListener('submit', (event) => {
               document.getElementById("xrefBtn").innerHTML = (txnType == "PREAUTH") ? "Collection" : "Refund";
               requestData.transactionType = nextType.toUpperCase(); // COLLECTION or REFUND for xref transaction type
               requestData.crossReference = response.crossReference;
-              buildXrefButton(requestData);
+              $('#' + nextType).show();
+              buildXrefButton(requestData, nextType + "-result");
 
               return response;
             })
