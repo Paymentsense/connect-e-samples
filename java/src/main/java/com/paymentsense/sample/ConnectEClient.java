@@ -121,9 +121,6 @@ public class ConnectEClient {
       .url(baseUrl + CROSS_REFERENCE_PAYMENTS_API + accessToken)
       .post(body)
       .build());
-    final String tmp = response.body().string();
-    log.info("XREF Response Body");
-    log.info(tmp);
-    return gson.fromJson(tmp, CrossReferencePaymentResponse.class);
+    return gson.fromJson(response.body().string(), CrossReferencePaymentResponse.class);
   }
 }
