@@ -78,24 +78,26 @@ const styles = {
 
 const form = document.getElementById('txn-type-select-form');
 
-const buildRefundButton = (xref, atData) => {
-  // after sale, process as REFUND
-  atData.transactionType = "REFUND";
-  atData.crossReference = xref;
+const buildXrefButton = (accessTokenData) => {
+  let elemId = '';
+  if (accessTokenData.transactionType == "REFUND") {
+    $('#refund').show();
+    elemId = 'refund-result';
+  } else {
+    $('#collection').show();
+    elemId = 'collection-result';
+  }
 
-  let refundButton = document.createElement("button");
-  refundButton.innerHTML = "Refund";
-  refundButton.onclick = function() {
-    refundButton.disabled = true;
-    console.log("clicked refund button");
-
+  $('#xrefBtn').on('click', () => {
+    $('#xrefBtn').prop('disabled', true);
+    console.log("clicked " + accessTokenData.transactionType + " button");
     // create a new access token with the updated transaction type
     fetch('/api/access-tokens',  {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(atData),
+      body: JSON.stringify(accessTokenData),
     }).then((accessTokensResponse) => {
       return accessTokensResponse.json();
     })
@@ -103,14 +105,14 @@ const buildRefundButton = (xref, atData) => {
       let xrefUrl = `/api/cross-reference-payments/${accessTokensResponse.id}`;
       fetch(xrefUrl, {
         method: 'POST',
-        body: JSON.stringify({ crossReference: xref })
+        body: JSON.stringify({ crossReference: accessTokenData.crossReference })
       })
       .then((xrefResponse) => {
         return xrefResponse.json();
       })
       .then((xrefResponse) => {
         // update refund div with response status
-        document.getElementById("refund").innerHTML = JSON.stringify(xrefResponse);
+        $('#' + elemId).html(JSON.stringify(xrefResponse));
         return xrefResponse;
       })
       .catch((error) => {
@@ -118,58 +120,8 @@ const buildRefundButton = (xref, atData) => {
         throw error;
       });
     });
-  }
-  refundButton.classList.add("btn-primary"); // btn pull-right
-  refundButton.classList.add("btn");
-  refundButton.classList.add("pull-right");
-  document.getElementById("refund").appendChild(refundButton);
-}
-
-const buildCollectionButton = (xref, atData) => {
-  // after preauth, process as COLLECTION
-  atData.transactionType = "COLLECTION";
-  atData.crossReference = xref;
-
-  let collectionButton = document.createElement("button");
-  collectionButton.innerHTML = "Collection";
-  collectionButton.onclick = function() {
-    collectionButton.disabled = true;
-    console.log("clicked collection button");
-    
-    // create a new access token with the updated transaction type
-    fetch('/api/access-tokens',  {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(atData),
-    }).then((accessTokensResponse) => {
-      return accessTokensResponse.json();
-    })
-    .then((accessTokensResponse) => {
-      let xrefUrl = `/api/cross-reference-payments/${accessTokensResponse.id}`;
-      fetch(xrefUrl, {
-        method: 'POST',
-        body: JSON.stringify({ crossReference: xref })
-      })
-      .then((xrefResponse) => {
-        return xrefResponse.json();
-      })
-      .then((xrefResponse) => {
-        // update preauth div with response status
-        document.getElementById("preauth").innerHTML = JSON.stringify(xrefResponse);
-        return xrefResponse;
-      })
-      .catch((error) => {
-        console.error(`${xrefUrl} - error`, JSON.stringify(error));
-        throw error;
-      });
-    });
-  }
-  collectionButton.classList.add("btn-primary"); // btn pull-right
-  collectionButton.classList.add("btn");
-  collectionButton.classList.add("pull-right");
-  document.getElementById("preauth").appendChild(collectionButton);
+  });
+  $('#xrefBtn').show();
 }
 
 form.addEventListener('submit', (event) => {
@@ -252,17 +204,11 @@ form.addEventListener('submit', (event) => {
                 'debug-confirm-payment',
               );
               debugConfirmPaymentDiv.innerHTML = JSON.stringify(response);
-
-              if (txnType == "PREAUTH") {
-                document.getElementById("xref").style.display = "block";
-                buildCollectionButton(response.crossReference, requestData);
-              }
-              if (txnType == "SALE") {
-                // hit the access tokens endpoint with refund type,
-                // then hit the cross reference endpoint with that token to execute
-                document.getElementById("xref").style.display = "block";
-                buildRefundButton(response.crossReference, requestData);
-              }
+              const nextType = (txnType == "PREAUTH") ? "collection" : "refund";
+              document.getElementById("xrefBtn").innerHTML = (txnType == "PREAUTH") ? "Collection" : "Refund";
+              requestData.transactionType = nextType.toUpperCase(); // COLLECTION or REFUND for xref transaction type
+              requestData.crossReference = response.crossReference;
+              buildXrefButton(requestData);
 
               return response;
             })

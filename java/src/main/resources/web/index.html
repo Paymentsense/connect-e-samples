@@ -106,9 +106,17 @@
     <div id="debug-confirm-payment"></div>
   </div>
   <hr />
-  <div id="xref" class="bordered" style="display:none">
-    <div id="preauth"></div>
-    <div id="refund"></div>
+  <div id="xref" class="bordered">
+    <button id="xrefBtn" class="btn-primary btn pull-right" data-loading-text="Processing..." style="display:none"></button>
+    <hr />
+    <div id="collection" style="display:none">
+      <span><b>Collection Result:</b></span>
+      <div id="collection-result"></div>
+    </div>
+    <div id="refund" style="display:none">
+      <span><b>Refund Result:</b></span>
+      <div id="refund-result"></div>
+    </div>
   </div>
   <script src="connect-e.js"></script>
 </body>
