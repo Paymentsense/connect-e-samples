@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  connect-e-samples-java:
+    container_name: connect-e-samples-java
+    image: connect-e-samples/java:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:${PORT}"
