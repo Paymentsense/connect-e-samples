@@ -21,6 +21,19 @@
 
             const btnPay = document.getElementById("btnPay");
             btnPay.onclick = () => processPayment();
+
+            function onFormFieldValidCallback(fieldName) {
+                console.log("isFormFieldValid", Date.now(), fieldName);
+            }
+
+            function onFormCompleteCallback() {
+                console.log("isFormComplete", Date.now());
+            }
+
+            payConfig.callbacks = {
+                onFormComplete: onFormCompleteCallback,
+                onFormFieldValid: onFormFieldValidCallback,
+            }
         })
     </script>
 @endsection
