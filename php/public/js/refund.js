@@ -1,11 +1,27 @@
+function processStartRefund() {
+    clearErrorMessage();
+
+    disableOrderFormInputs();
+    document.getElementById("inputCrossReference").setAttribute('readonly', "true");
+
+    const btnStartRefund = document.getElementById("btnStartRefund");
+    btnStartRefund.disabled = true;
+    btnStartRefund.innerText = "Loading...";
+
+    processRefundToken();
+}
+
 function processRefund() {
     clearErrorMessage();
 
     const btnRefund = document.getElementById("btnRefund");
     btnRefund.disabled = true;
-    btnRefund.innerText = "Loading..."
+    btnRefund.innerText = "Loading...";
 
-    processRefundToken();
+    document.getElementById("inputPaymentToken").setAttribute('readonly', "true");
+    document.getElementById("sectionRefundResult").classList.remove('hidden');
+
+    processRefundConfirmPayment();
 }
 
 function processRefundToken() {
@@ -17,10 +33,10 @@ function processRefundToken() {
     }
 
     const amount = document.getElementById("inputAmount").value;
-    const transactionType = document.getElementById("inputRefundTransactionType").value;
+    const transactionType = document.getElementById("inputTransactionType").value;
     const orderId = document.getElementById("inputOrderId").value;
     const orderDescription = document.getElementById("inputOrderDescription").value;
-    const crossReference = document.getElementById("inputRefundCrossReference").value
+    const crossReference = document.getElementById("inputCrossReference").value
 
     const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription + "&crossReference=" + crossReference;
@@ -35,9 +51,9 @@ function processRefundTokenRequestStateChange(xhr) {
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
 
-        const btnRefund = document.getElementById("btnRefund");
-        btnRefund.disabled = false;
-        btnRefund.innerText = "Refund";
+        const btnStartRefund = document.getElementById("btnStartRefund");
+        btnStartRefund.disabled = false;
+        btnStartRefund.innerText = "Submit";
 
         showErrorMessage("An api error occurred, please check console.log for details");
         return;
@@ -49,16 +65,14 @@ function processRefundTokenRequestStateChange(xhr) {
         return;
     }
 
-    payConfig.paymentDetails.paymentToken = response.id;
-
-    document.getElementById("btnRefund").remove();
-    document.getElementById("sectionRefundResult").classList.remove("hidden");
-
-    processRefundConfirmPayment();
+    document.getElementById("btnStartRefund").remove();
+    document.getElementById("inputPaymentToken").value = response.id;
+    document.getElementById("sectionRefundPaymentToken").classList.remove("hidden");
 }
 
 function processRefundConfirmPayment() {
-    const id = payConfig.paymentDetails.paymentToken;
+    const id = document.getElementById("inputPaymentToken").value;
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/cross-reference-payments/' + id, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -66,7 +80,7 @@ function processRefundConfirmPayment() {
         processRefundConfirmPaymentRequestStateChange(xhr);
     }
 
-    const params = "crossReference=" + document.getElementById("inputRefundCrossReference").value;
+    const params = "crossReference=" + document.getElementById("inputCrossReference").value;
 
     xhr.send(params);
 }
@@ -100,6 +114,7 @@ function processRefundConfirmPaymentRequestStateChange(xhr) {
             transactionTable.appendChild(tableRow);
         }
     }
+    document.getElementById("btnRefund").remove();
     document.getElementById("sectionRefundResultLoading").classList.add("hidden");
     document.getElementById("sectionRefundResultTable").classList.remove("hidden");
 }

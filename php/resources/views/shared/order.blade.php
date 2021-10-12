@@ -2,12 +2,12 @@
     <h2>Order</h2>
     <form id="orderForm">
         <div class="form-group">
-            <label for="inputAmount">Amount (£)</label>
-            <input type="text" class="form-control" id="inputAmount" value="100">
-        </div>
-        <div class="form-group">
             <label for="inputTransactionType">Transaction type</label>
             <input class="form-control" type="text" id="inputTransactionType" value="{{ $transactionType }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="inputAmount">Amount (£)</label>
+            <input type="text" class="form-control" id="inputAmount" value="100">
         </div>
         <div class="form-group">
             <label for="inputOrderId">Order Id</label>

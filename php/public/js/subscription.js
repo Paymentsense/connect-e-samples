@@ -1,3 +1,16 @@
+function processStartSubscription() {
+    clearErrorMessage();
+
+    disableOrderFormInputs();
+    document.getElementById("inputCrossReference").setAttribute('readonly', "true");
+
+    const btnStartSubscription = document.getElementById("btnStartSubscription");
+    btnStartSubscription.disabled = true;
+    btnStartSubscription.innerText = "Loading...";
+
+    processSubscriptionToken();
+}
+
 function processSubscription() {
     clearErrorMessage();
 
@@ -5,7 +18,10 @@ function processSubscription() {
     btnSubscription.disabled = true;
     btnSubscription.innerText = "Loading..."
 
-    processSubscriptionToken();
+    document.getElementById("inputPaymentToken").setAttribute('readonly', "true");
+    document.getElementById("sectionSubscriptionResult").classList.remove("hidden");
+
+    processSubscriptionConfirmPayment();
 }
 
 function processSubscriptionToken() {
@@ -17,10 +33,10 @@ function processSubscriptionToken() {
     }
 
     const amount = document.getElementById("inputAmount").value;
-    const transactionType = document.getElementById("inputSubscriptionTransactionType").value;
+    const transactionType = document.getElementById("inputTransactionType").value;
     const orderId = document.getElementById("inputOrderId").value;
     const orderDescription = document.getElementById("inputOrderDescription").value;
-    const crossReference = document.getElementById("inputSubscriptionCrossReference").value
+    const crossReference = document.getElementById("inputCrossReference").value
 
     const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription + "&crossReference=" + crossReference;
@@ -35,9 +51,9 @@ function processSubscriptionTokenRequestStateChange(xhr) {
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
 
-        const btnSubscription = document.getElementById("btnSubscription");
-        btnSubscription.disabled = false;
-        btnSubscription.innerText = "Subscription";
+        const btnStartSubscription = document.getElementById("btnStartSubscription");
+        btnStartSubscription.disabled = false;
+        btnStartSubscription.innerText = "Submit";
 
         showErrorMessage("An api error occurred, please check console.log for details");
         return;
@@ -49,16 +65,14 @@ function processSubscriptionTokenRequestStateChange(xhr) {
         return;
     }
 
-    payConfig.paymentDetails.paymentToken = response.id;
-
-    document.getElementById("btnSubscription").remove();
-    document.getElementById("sectionSubscriptionResult").classList.remove("hidden");
-
-    processSubscriptionConfirmPayment();
+    document.getElementById("inputPaymentToken").value = response.id;
+    document.getElementById("btnStartSubscription").remove();
+    document.getElementById("sectionSubscriptionPaymentToken").classList.remove("hidden");
 }
 
 function processSubscriptionConfirmPayment() {
-    const id = payConfig.paymentDetails.paymentToken;
+    const id = document.getElementById("inputPaymentToken").value;
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/cross-reference-payments/' + id, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -66,7 +80,7 @@ function processSubscriptionConfirmPayment() {
         processSubscriptionConfirmPaymentRequestStateChange(xhr);
     }
 
-    const params = "crossReference=" + document.getElementById("inputSubscriptionCrossReference").value;
+    const params = "crossReference=" + document.getElementById("inputCrossReference").value;
 
     xhr.send(params);
 }
@@ -100,6 +114,7 @@ function processSubscriptionConfirmPaymentRequestStateChange(xhr) {
             transactionTable.appendChild(tableRow);
         }
     }
+    document.getElementById("btnSubscription").remove();
     document.getElementById("sectionSubscriptionResultLoading").classList.add("hidden");
     document.getElementById("sectionSubscriptionResultTable").classList.remove("hidden");
 }

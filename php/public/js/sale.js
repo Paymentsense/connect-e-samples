@@ -12,30 +12,6 @@ function processOrder(tokenCallback = function(response){}) {
     processPaymentToken(tokenCallback);
 }
 
-function disableOrderFormInputs() {
-    document.getElementById("inputAmount").setAttribute('readonly', "true");
-    document.getElementById("inputOrderId").setAttribute('readonly', "true");
-    document.getElementById("inputOrderDescription").setAttribute('readonly', "true");
-}
-
-function enableOrderFormInputs() {
-    document.getElementById("inputAmount").removeAttribute('readonly');
-    document.getElementById("inputOrderId").removeAttribute('readonly');
-    document.getElementById("inputOrderDescription").removeAttribute('readonly');
-}
-
-function showErrorMessage(message) {
-    const errorMsg = document.getElementById("errorMsg");
-    errorMsg.classList.remove('hidden');
-    errorMsg.innerText = message;
-}
-
-function clearErrorMessage() {
-    const errorMsg = document.getElementById("errorMsg");
-    errorMsg.classList.add('hidden');
-    errorMsg.innerText = "";
-}
-
 function processPaymentToken(tokenCallback = function(response){}) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/access-tokens', true);
@@ -78,18 +54,32 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
         return;
     }
 
-    payConfig.paymentDetails.amount = document.getElementById("inputAmount").value;
-    payConfig.paymentDetails.paymentToken = response.id;
-
-    connectE = new Connect.ConnectE(payConfig, displayErrors);
-
     document.getElementById("btnOrder").remove();
-    document.getElementById("sectionCardHelp").classList.remove('hidden');
-    document.getElementById("sectionPay").classList.remove('hidden');
+    document.getElementById("inputOrderPaymentToken").value = response.id;
+    document.getElementById("sectionOrderPaymentToken").classList.remove('hidden');
 
     if (typeof tokenCallback === 'function') {
         tokenCallback(response)
     }
+}
+
+function processStartPayment() {
+    clearErrorMessage();
+
+    const btnStartPayment = document.getElementById("btnStartPayment");
+    btnStartPayment.disabled = true;
+    btnStartPayment.innerText = "Loading...";
+
+    payConfig.paymentDetails.amount = document.getElementById("inputAmount").value;
+    payConfig.paymentDetails.paymentToken = document.getElementById("inputOrderPaymentToken").value;
+
+    connectE = new Connect.ConnectE(payConfig, displayErrors);
+
+    document.getElementById("inputOrderPaymentToken").setAttribute('readonly', "true");
+    document.getElementById("btnStartPayment").remove();
+
+    document.getElementById("sectionCardHelp").classList.remove('hidden');
+    document.getElementById("sectionPay").classList.remove('hidden');
 }
 
 function processPayment(confirmPaymentCallback = function (response) {}) {

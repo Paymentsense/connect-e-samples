@@ -1,3 +1,18 @@
+function processStartCollect() {
+    clearErrorMessage();
+
+    const btnStartCollect = document.getElementById("btnStartCollect");
+    btnStartCollect.disabled = true;
+    btnStartCollect.innerText = "Loading...";
+
+    document.getElementById("inputCollectAmount").setAttribute('readonly', "true");
+    document.getElementById("inputCollectOrderId").setAttribute('readonly', "true");
+    document.getElementById("inputCollectOrderDescription").setAttribute('readonly', "true");
+    document.getElementById("inputCollectCrossReference").setAttribute('readonly', "true");
+
+    processCollectToken();
+}
+
 function processCollect() {
     clearErrorMessage();
 
@@ -5,7 +20,10 @@ function processCollect() {
     btnCollect.disabled = true;
     btnCollect.innerText = "Loading...";
 
-    processCollectToken();
+    document.getElementById("inputCollectPaymentToken").setAttribute('readonly', "true");
+    document.getElementById("sectionCollectResult").classList.remove("hidden");
+
+    processCollectConfirmPayment();
 }
 
 function processCollectToken() {
@@ -35,9 +53,9 @@ function processCollectTokenRequestStateChange(xhr) {
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
 
-        const btnCollect = document.getElementById("btnCollect");
-        btnCollect.disabled = false;
-        btnCollect.innerText = "Collect";
+        const btnStartCollect = document.getElementById("btnStartCollect");
+        btnStartCollect.disabled = false;
+        btnStartCollect.innerText = "Submit";
 
         showErrorMessage("An api error occurred, please check console.log for details");
         return;
@@ -49,16 +67,14 @@ function processCollectTokenRequestStateChange(xhr) {
         return;
     }
 
-    payConfig.paymentDetails.paymentToken = response.id;
-
-    document.getElementById("btnCollect").remove();
-    document.getElementById("sectionCollectResult").classList.remove("hidden");
-
-    processCollectConfirmPayment();
+    document.getElementById("inputCollectPaymentToken").value = response.id;
+    document.getElementById("btnStartCollect").remove();
+    document.getElementById("sectionCollectPaymentToken").classList.remove("hidden");
 }
 
 function processCollectConfirmPayment() {
-    const id = payConfig.paymentDetails.paymentToken;
+    const id = document.getElementById("inputCollectPaymentToken").value;
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/cross-reference-payments/' + id, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -100,6 +116,7 @@ function processCollectConfirmPaymentRequestStateChange(xhr) {
             transactionTable.appendChild(tableRow);
         }
     }
+    document.getElementById("btnCollect").remove();
     document.getElementById("sectionCollectResultLoading").classList.add("hidden");
     document.getElementById("sectionCollectResultTable").classList.remove("hidden");
 }
