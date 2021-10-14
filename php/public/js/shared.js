@@ -21,3 +21,17 @@ function enableOrderFormInputs() {
     document.getElementById("inputOrderId").removeAttribute('readonly');
     document.getElementById("inputOrderDescription").removeAttribute('readonly');
 }
+
+function displayErrors(errors) {
+    const errorsDiv = document.getElementById('errors');
+    errorsDiv.innerHTML = '';
+    if (errors && errors.length) {
+        const list = document.createElement("ul");
+        for (const error of errors){
+            const item = document.createElement("li");
+            item.innerText = error.message;
+            list.appendChild(item);
+        }
+        errorsDiv.appendChild(list);
+    }
+}

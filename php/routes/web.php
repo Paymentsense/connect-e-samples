@@ -21,3 +21,4 @@ $router->get('/pre-auth', 'WebController@preAuth');
 $router->get('/refund', 'WebController@refund');
 $router->get('/sale', 'WebController@sale');
 $router->get('/subscription', 'WebController@subscription');
+$router->get('/wallet', 'WebController@wallet');

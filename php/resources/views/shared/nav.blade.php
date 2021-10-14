@@ -17,6 +17,9 @@
             <li class="nav-item {{ app('request')->get('path') ==  '/pre-auth' ? 'active' : ''  }}">
                 <a class="nav-link" href="/pre-auth">PreAuth</a>
             </li>
+            <li class="nav-item {{ app('request')->get('path') ==  '/wallet' ? 'active' : ''  }}">
+                <a class="nav-link" href="/wallet">Wallet</a>
+            </li>
         </ul>
     </div>
 </nav>

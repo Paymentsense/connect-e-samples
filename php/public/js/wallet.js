@@ -1,4 +1,4 @@
-let connectE;
+let wallet;
 
 function processOrder(tokenCallback = function(response){}) {
     clearErrorMessage();
@@ -72,28 +72,30 @@ function processStartPayment() {
     payConfig.paymentDetails.amount = document.getElementById("inputAmount").value;
     payConfig.paymentDetails.paymentToken = document.getElementById("inputOrderPaymentToken").value;
 
-    connectE = new Connect.ConnectE(payConfig, displayErrors);
-
     document.getElementById("inputOrderPaymentToken").setAttribute('readonly', "true");
     document.getElementById("btnStartPayment").remove();
 
-    document.getElementById("sectionCardHelp").classList.remove('hidden');
+    wallet = new Connect.Wallet(payConfig, processWalletResult, displayErrors);
+
     document.getElementById("sectionPay").classList.remove('hidden');
 }
 
-function processPayment(confirmPaymentCallback = function (response) {}) {
-    clearErrorMessage();
+function processWalletResult(transactionResult) {
+    console.log(transactionResult);
+    return;
 
-    const btnPay = document.getElementById("btnPay");
-    btnPay.disabled = true;
-    btnPay.innerText = "Loading...";
-
-    connectE.executePayment()
-        .then(function(data) {
-            processPaymentSuccess(data, confirmPaymentCallback);
-        }).catch(function(data) {
-            processPaymentError(data);
-        });
+    // clearErrorMessage();
+    //
+    // const btnPay = document.getElementById("btnPay");
+    // btnPay.disabled = true;
+    // btnPay.innerText = "Loading...";
+    //
+    // connectE.executePayment()
+    //     .then(function(data) {
+    //         processPaymentSuccess(data, confirmPaymentCallback);
+    //     }).catch(function(data) {
+    //         processPaymentError(data);
+    //     });
 }
 
 function processPaymentSuccess(data, confirmPaymentCallback = function(response){}) {

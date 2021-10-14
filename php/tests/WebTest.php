@@ -46,4 +46,13 @@ class WebTest extends TestCase
         $expectedView = view('subscription');
         $this->assertEquals($expectedView->render(), $this->response->getContent());
     }
+
+    public function testWallet()
+    {
+        $this->get('/wallet');
+        $this->assertResponseOk();
+
+        $expectedView = view('wallet');
+        $this->assertEquals($expectedView->render(), $this->response->getContent());
+    }
 }

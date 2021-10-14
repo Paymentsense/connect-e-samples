@@ -30,4 +30,9 @@ class WebController extends BaseController
     {
         return view('subscription');
     }
+
+    public function wallet()
+    {
+        return view('wallet');
+    }
 }
