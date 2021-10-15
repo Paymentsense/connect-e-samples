@@ -24,8 +24,13 @@ function processPaymentToken(tokenCallback = function(response){}) {
     const orderId = document.getElementById("inputOrderId").value;
     const orderDescription = document.getElementById("inputOrderDescription").value;
 
-    const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
+    let params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription;
+
+    const crossReference = document.getElementById("inputCrossReference").value;
+    if (crossReference.length > 0) {
+        params += "&crossReference=" + crossReference;
+    }
 
     xhr.send(params);
 }
@@ -123,54 +128,5 @@ function processPaymentError(data) {
     }
     if (data && data.message) {
         document.getElementById("errors").innerText = data.message;
-    }
-}
-
-function processConfirmPayment(confirmPaymentCallback = function(response){}) {
-    clearErrorMessage();
-
-    const id = payConfig.paymentDetails.paymentToken;
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/api/payments/' + id, true);
-    xhr.onreadystatechange = function() {
-        processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback);
-    }
-
-    xhr.send();
-}
-
-function processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback = function(response){}) {
-    if (xhr.readyState !== 4) {
-        return;
-    }
-    if (xhr.status !== 200) {
-        console.error("unexpected api response code", xhr.status, xhr.responseText);
-        showErrorMessage("An api error occurred, please check console.log for details");
-        return;
-    }
-    const response = JSON.parse(xhr.responseText);
-    if (typeof response.crossReference === 'undefined') {
-        console.error("unexpected api response", response);
-        showErrorMessage("An api error occurred, please check console.log for details");
-        return;
-    }
-    const transactionTable = document.getElementById("payResultTable");
-    for (const prop in response) {
-        if (response.hasOwnProperty(prop)) {
-            const fieldCell = document.createElement('td');
-            fieldCell.innerText = prop;
-            const valueCell = document.createElement('td');
-            valueCell.innerText = response[prop];
-            const tableRow = document.createElement('tr');
-            tableRow.appendChild(fieldCell);
-            tableRow.appendChild(valueCell);
-            transactionTable.appendChild(tableRow);
-        }
-    }
-    document.getElementById("sectionPayResultLoading").classList.add("hidden");
-    document.getElementById("sectionPayResultTable").classList.remove("hidden");
-
-    if (typeof confirmPaymentCallback === 'function') {
-        confirmPaymentCallback(response);
     }
 }

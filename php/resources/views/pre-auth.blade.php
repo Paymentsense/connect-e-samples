@@ -21,87 +21,39 @@
             const btnOrder = document.getElementById("btnOrder");
             btnOrder.onclick = () => processOrder();
 
-            const btnStartPayment = document.getElementById("btnStartPayment");
-            btnStartPayment.onclick = () => processStartPayment();
-
-            let confirmPaymentCallback = function(response) {
-                if (typeof response.statusCode === 'undefined' || response.statusCode !== 0) {
-                    console.error("invalid response", response);
-                    showErrorMessage("An api error occurred, please check console.log for details");
-                    return;
+            const btnStartPaymentOnClick = function() {
+                const crossRef = document.getElementById("inputCrossReference").value;
+                if (crossRef.length === 0) {
+                    processStartPayment();
+                } else {
+                    processPreAuth();
                 }
-                document.getElementById("inputCollectCrossReference").value = response.crossReference;
-                document.getElementById("sectionCollect").classList.remove("hidden");
+                return false;
             }
 
+            const btnStartPayment = document.getElementById("btnStartPayment");
+            btnStartPayment.onclick = () => btnStartPaymentOnClick();
+
             const btnPay = document.getElementById("btnPay");
-            btnPay.onclick = () => processPayment(confirmPaymentCallback);
+            btnPay.onclick = () => processPayment();
 
-            const btnStartCollect = document.getElementById("btnStartCollect");
-            btnStartCollect.onclick = () => processStartCollect();
+            function onFormCompleteCallback() {
+                document.getElementById("btnPay").focus();
+            }
 
-            const btnCollect = document.getElementById("btnCollect");
-            btnCollect.onclick = () => processCollect();
+            payConfig.callbacks = {
+                onFormComplete: onFormCompleteCallback,
+            }
         })
     </script>
 @endsection
 
 @section('body')
-    <h1>PreAuth &#38; Collect</h1>
+    <h1>PreAuth</h1>
     @include('shared.error')
-    @include('shared.order', ['transactionType' => 'PREAUTH'])
+    @include('shared.order', ['transactionType' => 'PREAUTH', 'showCrossRef' => true])
     @include('shared.order_payment_token')
     @include('shared.card_help')
     @include('shared.pay')
     @include('shared.pay_result')
-    <div id="sectionCollect" class="hidden">
-        <h2>Collect</h2>
-        <form id="collectForm">
-            <div class="form-group">
-                <label for="inputCollectTransactionType">Transaction type</label>
-                <input class="form-control" type="text" id="inputCollectTransactionType" value="COLLECTION" readonly>
-            </div>
-            <div class="form-group">
-                <label for="inputCollectAmount">Amount (£)</label>
-                <input type="text" class="form-control" id="inputCollectAmount" value="100">
-            </div>
-            <div class="form-group">
-                <label for="inputCollectOrderId">Order Id</label>
-                <input type="text" class="form-control" id="inputCollectOrderId" value="ORD00001">
-            </div>
-            <div class="form-group">
-                <label for="inputCollectOrderDescription">Order description</label>
-                <textarea class="form-control" id="inputCollectOrderDescription" rows="3">Example description.</textarea>
-            </div>
-            <div class="form-group">
-                <label for="inputCollectCrossReference">Cross Reference</label>
-                <input class="form-control" type="text" id="inputCollectCrossReference" value="">
-            </div>
-            <button id="btnStartCollect" type="submit" class="btn-primary btn pull-right">Submit</button>
-        </form>
-    </div>
-    <div id="sectionCollectPaymentToken" class="hidden">
-        <h2>Collect: Payment Token</h2>
-        <form id="collectPaymentTokenForm">
-            <div class="form-group">
-                <label for="inputCollectPaymentToken">Payment Token</label>
-                <input type="text" class="form-control" id="inputCollectPaymentToken" value="">
-            </div>
-            <button id="btnCollect" type="submit" class="btn-primary btn pull-right">Submit</button>
-        </form>
-    </div>
-    <div id="sectionCollectResult" class="hidden">
-        <h3>Result</h3>
-        <div id="sectionCollectResultLoading">
-            <p>Loading...</p>
-        </div>
-        <div id="sectionCollectResultTable" class="hidden">
-            <table id="collectResultTable">
-                <tr>
-                    <th>Field</th>
-                    <th>Value</th>
-                </tr>
-            </table>
-        </div>
-    </div>
 @endsection

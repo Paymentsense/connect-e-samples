@@ -1,42 +1,44 @@
-function processStartRefund() {
+function processStartCollect() {
     clearErrorMessage();
 
-    disableOrderFormInputs();
-    document.getElementById("inputCrossReference").setAttribute('readonly', "true");
+    const btnStartCollect = document.getElementById("btnStartCollect");
+    btnStartCollect.disabled = true;
+    btnStartCollect.innerText = "Loading...";
 
-    const btnStartRefund = document.getElementById("btnStartRefund");
-    btnStartRefund.disabled = true;
-    btnStartRefund.innerText = "Loading...";
+    document.getElementById("inputCollectAmount").setAttribute('readonly', "true");
+    document.getElementById("inputCollectOrderId").setAttribute('readonly', "true");
+    document.getElementById("inputCollectOrderDescription").setAttribute('readonly', "true");
+    document.getElementById("inputCollectCrossReference").setAttribute('readonly', "true");
 
-    processRefundToken();
+    processCollectToken();
 }
 
-function processRefund() {
+function processCollect() {
     clearErrorMessage();
 
-    const btnRefund = document.getElementById("btnRefund");
-    btnRefund.disabled = true;
-    btnRefund.innerText = "Loading...";
+    const btnCollect = document.getElementById("btnCollect");
+    btnCollect.disabled = true;
+    btnCollect.innerText = "Loading...";
 
-    document.getElementById("inputPaymentToken").setAttribute('readonly', "true");
-    document.getElementById("sectionRefundResult").classList.remove('hidden');
+    document.getElementById("inputCollectPaymentToken").setAttribute('readonly', "true");
+    document.getElementById("sectionCollectResult").classList.remove("hidden");
 
-    processRefundConfirmPayment();
+    processCollectConfirmPayment();
 }
 
-function processRefundToken() {
+function processCollectToken() {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/access-tokens', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     xhr.onreadystatechange = function() {
-        processRefundTokenRequestStateChange(xhr);
+        processCollectTokenRequestStateChange(xhr);
     }
 
     const amount = document.getElementById("inputAmount").value;
-    const transactionType = document.getElementById("inputTransactionType").value;
+    const transactionType = document.getElementById("inputCollectTransactionType").value;
     const orderId = document.getElementById("inputOrderId").value;
     const orderDescription = document.getElementById("inputOrderDescription").value;
-    const crossReference = document.getElementById("inputCrossReference").value
+    const crossReference = document.getElementById("inputCollectCrossReference").value
 
     const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription + "&crossReference=" + crossReference;
@@ -44,16 +46,16 @@ function processRefundToken() {
     xhr.send(params);
 }
 
-function processRefundTokenRequestStateChange(xhr) {
+function processCollectTokenRequestStateChange(xhr) {
     if (xhr.readyState !== 4) {
         return;
     }
     if (xhr.status !== 201) {
         console.error("unexpected api response code", xhr.status, xhr.responseText);
 
-        const btnStartRefund = document.getElementById("btnStartRefund");
-        btnStartRefund.disabled = false;
-        btnStartRefund.innerText = "Submit";
+        const btnStartCollect = document.getElementById("btnStartCollect");
+        btnStartCollect.disabled = false;
+        btnStartCollect.innerText = "Submit";
 
         showErrorMessage("An api error occurred, please check console.log for details");
         return;
@@ -65,27 +67,27 @@ function processRefundTokenRequestStateChange(xhr) {
         return;
     }
 
-    document.getElementById("btnStartRefund").remove();
-    document.getElementById("inputPaymentToken").value = response.id;
-    document.getElementById("sectionRefundPaymentToken").classList.remove("hidden");
+    document.getElementById("inputCollectPaymentToken").value = response.id;
+    document.getElementById("btnStartCollect").remove();
+    document.getElementById("sectionCollectPaymentToken").classList.remove("hidden");
 }
 
-function processRefundConfirmPayment() {
-    const id = document.getElementById("inputPaymentToken").value;
+function processCollectConfirmPayment() {
+    const id = document.getElementById("inputCollectPaymentToken").value;
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/cross-reference-payments/' + id, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     xhr.onreadystatechange = function() {
-        processRefundConfirmPaymentRequestStateChange(xhr);
+        processCollectConfirmPaymentRequestStateChange(xhr);
     }
 
-    const params = "crossReference=" + document.getElementById("inputCrossReference").value;
+    const params = "crossReference=" + document.getElementById("inputCollectCrossReference").value;
 
     xhr.send(params);
 }
 
-function processRefundConfirmPaymentRequestStateChange(xhr) {
+function processCollectConfirmPaymentRequestStateChange(xhr) {
     if (xhr.readyState !== 4) {
         return;
     }
@@ -101,7 +103,7 @@ function processRefundConfirmPaymentRequestStateChange(xhr) {
         return;
     }
     payment = response;
-    const transactionTable = document.getElementById("refundResultTable");
+    const transactionTable = document.getElementById("collectResultTable");
     for (const prop in response) {
         if (response.hasOwnProperty(prop)) {
             const fieldCell = document.createElement('td');
@@ -114,7 +116,7 @@ function processRefundConfirmPaymentRequestStateChange(xhr) {
             transactionTable.appendChild(tableRow);
         }
     }
-    document.getElementById("btnRefund").remove();
-    document.getElementById("sectionRefundResultLoading").classList.add("hidden");
-    document.getElementById("sectionRefundResultTable").classList.remove("hidden");
+    document.getElementById("btnCollect").remove();
+    document.getElementById("sectionCollectResultLoading").classList.add("hidden");
+    document.getElementById("sectionCollectResultTable").classList.remove("hidden");
 }

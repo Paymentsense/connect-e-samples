@@ -17,6 +17,14 @@
             <label for="inputOrderDescription">Order description</label>
             <textarea class="form-control" id="inputOrderDescription" rows="3">Example description.</textarea>
         </div>
+        @if (!empty($showCrossRef))
+            <div class="form-group">
+        @else
+            <div class="form-group hidden">
+        @endif
+                <label for="inputCrossReference">Cross Reference</label>
+                <input class="form-control" type="text" id="inputCrossReference" value="">
+            </div>
         <button id="btnOrder" type="submit" class="btn-primary btn pull-right">Submit</button>
     </form>
 </div>

@@ -27,7 +27,6 @@
             btnPay.onclick = () => processPayment();
 
             function onFormCompleteCallback() {
-                console.log("isFormComplete", Date.now());
                 document.getElementById("btnPay").focus();
             }
 

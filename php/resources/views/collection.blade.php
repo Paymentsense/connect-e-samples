@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Wallet')
+@section('title', 'Collection')
 
 @section('stylesheets')
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -12,43 +12,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="{{ env('CONNECT_E_BASE_WEB_URL') }}/assets/js/client.js"></script>
-    <script src="{{ url("js/pay_config_wallet.js") }}"></script>
+    <script src="{{ url("js/pay_config.js") }}"></script>
     <script src="{{ url("js/shared.js") }}"></script>
     <script src="{{ url("js/sale.js") }}"></script>
-    <script src="{{ url("js/wallet.js") }}"></script>
     <script type="text/javascript">
         window.addEventListener('load', function () {
+            const onBtnOrderClick = function() {
+                const crossRef = document.getElementById("inputCrossReference").value;
+                if (crossRef.length === 0) {
+                    showErrorMessage("Cross Reference cannot be empty for collections");
+                    return false;
+                }
+                processOrder();
+            }
+
             const btnOrder = document.getElementById("btnOrder");
-            btnOrder.onclick = () => processOrder();
+            btnOrder.onclick = () => onBtnOrderClick();
 
             const btnStartPayment = document.getElementById("btnStartPayment");
-            btnStartPayment.onclick = () => startWalletPayment();
+            btnStartPayment.onclick = () => processCrossReference();
         })
     </script>
 @endsection
 
 @section('body')
-    <h1>Wallet</h1>
+    <h1>Collection</h1>
     @include('shared.error')
-    @include('shared.order', ['transactionType' => 'SALE'])
+    @include('shared.order', ['transactionType' => 'COLLECTION', 'showCrossRef' => true])
     @include('shared.order_payment_token')
-    <div id="sectionPay" class="hidden">
-        <h3>Pay</h3>
-        <div id="applePayNotSupportWarning" class="alert alert-warning hidden" role="alert">
-            ApplePay is not supported for local development, please use a none-safari browser.<br />
-            This is caused by Apple's verified domain requirements.
-        </div>
-        <div id="demo-payment-wallet"></div>
-        <div id="errors"></div>
-        <div id="demo-result" class="hidden">
-            <h5>Payment Complete</h5>
-            <dl>
-                <dt>Status Code</dt>
-                <dd id="status-code"></dd>
-                <dt>Auth Code</dt>
-                <dd id="auth-code"></dd>
-            </dl>
-        </div>
-    </div>
     @include('shared.pay_result')
 @endsection
