@@ -2,6 +2,15 @@
 
 class WebTest extends TestCase
 {
+    public function testCollection()
+    {
+        $this->get('/collection');
+        $this->assertResponseOk();
+
+        $expectedView = view('collection');
+        $this->assertEquals($expectedView->render(), $this->response->getContent());
+    }
+
     public function testHome()
     {
         $this->get('/');
@@ -44,6 +53,15 @@ class WebTest extends TestCase
         $this->assertResponseOk();
 
         $expectedView = view('subscription');
+        $this->assertEquals($expectedView->render(), $this->response->getContent());
+    }
+
+    public function testVoid()
+    {
+        $this->get('/void');
+        $this->assertResponseOk();
+
+        $expectedView = view('void');
         $this->assertEquals($expectedView->render(), $this->response->getContent());
     }
 

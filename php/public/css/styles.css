@@ -11,3 +11,14 @@
     text-align: center;
     width: 100%;
 }
+
+.threeDs {
+    background-color: #ffffff;
+    border: 3px solid #000000;
+    display: block;
+    height: 50%;
+    left: 25%;
+    position: fixed;
+    top: 25%;
+    width: 50%;
+}
