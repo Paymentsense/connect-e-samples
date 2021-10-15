@@ -20,7 +20,7 @@
             const onBtnOrderClick = function() {
                 const crossRef = document.getElementById("inputCrossReference").value;
                 if (crossRef.length === 0) {
-                    showErrorMessage("Cross Reference cannot be empty for collections");
+                    showErrorMessage("Cross Reference is required for collection transactions");
                     return false;
                 }
                 processOrder();

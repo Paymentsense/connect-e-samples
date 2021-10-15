@@ -17,8 +17,17 @@
     <script src="{{ url("js/sale.js") }}"></script>
     <script type="text/javascript">
         window.addEventListener('load', function () {
+            const onBtnOrderClick = function() {
+                const crossRef = document.getElementById("inputCrossReference").value;
+                if (crossRef.length === 0) {
+                    showErrorMessage("Cross Reference is required for refund transactions");
+                    return false;
+                }
+                processOrder();
+            }
+
             const btnOrder = document.getElementById("btnOrder");
-            btnOrder.onclick = () => processOrder();
+            btnOrder.onclick = () => onBtnOrderClick();
 
             const btnStartPayment = document.getElementById("btnStartPayment");
             btnStartPayment.onclick = () => processCrossReference();
