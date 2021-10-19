@@ -1,5 +1,4 @@
 let connectE;
-let payment;
 
 function processOrder(tokenCallback = function(response){}) {
     clearErrorMessage();
@@ -10,30 +9,6 @@ function processOrder(tokenCallback = function(response){}) {
     btnOrder.innerText = "Loading..."
 
     processPaymentToken(tokenCallback);
-}
-
-function disableOrderFormInputs() {
-    document.getElementById("inputAmount").setAttribute('readonly', "true");
-    document.getElementById("inputOrderId").setAttribute('readonly', "true");
-    document.getElementById("inputOrderDescription").setAttribute('readonly', "true");
-}
-
-function enableOrderFormInputs() {
-    document.getElementById("inputAmount").removeAttribute('readonly');
-    document.getElementById("inputOrderId").removeAttribute('readonly');
-    document.getElementById("inputOrderDescription").removeAttribute('readonly');
-}
-
-function showErrorMessage(message) {
-    const errorMsg = document.getElementById("errorMsg");
-    errorMsg.classList.remove('hidden');
-    errorMsg.innerText = message;
-}
-
-function clearErrorMessage() {
-    const errorMsg = document.getElementById("errorMsg");
-    errorMsg.classList.add('hidden');
-    errorMsg.innerText = "";
 }
 
 function processPaymentToken(tokenCallback = function(response){}) {
@@ -49,8 +24,13 @@ function processPaymentToken(tokenCallback = function(response){}) {
     const orderId = document.getElementById("inputOrderId").value;
     const orderDescription = document.getElementById("inputOrderDescription").value;
 
-    const params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
+    let params = "amount=" + amount + "&transactionType=" + transactionType + "&orderId=" +
         orderId + "&orderDescription=" + orderDescription;
+
+    const crossReference = document.getElementById("inputCrossReference").value;
+    if (crossReference.length > 0) {
+        params += "&crossReference=" + crossReference;
+    }
 
     xhr.send(params);
 }
@@ -78,18 +58,32 @@ function processPaymentTokenRequestStateChange(xhr, tokenCallback = function(res
         return;
     }
 
-    payConfig.paymentDetails.amount = document.getElementById("inputAmount").value;
-    payConfig.paymentDetails.paymentToken = response.id;
-
-    connectE = new Connect.ConnectE(payConfig, displayErrors);
-
     document.getElementById("btnOrder").remove();
-    document.getElementById("sectionCardHelp").classList.remove('hidden');
-    document.getElementById("sectionPay").classList.remove('hidden');
+    document.getElementById("inputOrderPaymentToken").value = response.id;
+    document.getElementById("sectionOrderPaymentToken").classList.remove('hidden');
 
     if (typeof tokenCallback === 'function') {
         tokenCallback(response)
     }
+}
+
+function processStartPayment() {
+    clearErrorMessage();
+
+    const btnStartPayment = document.getElementById("btnStartPayment");
+    btnStartPayment.disabled = true;
+    btnStartPayment.innerText = "Loading...";
+
+    payConfig.paymentDetails.amount = document.getElementById("inputAmount").value;
+    payConfig.paymentDetails.paymentToken = document.getElementById("inputOrderPaymentToken").value;
+
+    connectE = new Connect.ConnectE(payConfig, displayErrors);
+
+    document.getElementById("inputOrderPaymentToken").setAttribute('readonly', "true");
+    document.getElementById("btnStartPayment").remove();
+
+    document.getElementById("sectionCardHelp").classList.remove('hidden');
+    document.getElementById("sectionPay").classList.remove('hidden');
 }
 
 function processPayment(confirmPaymentCallback = function (response) {}) {
@@ -134,69 +128,5 @@ function processPaymentError(data) {
     }
     if (data && data.message) {
         document.getElementById("errors").innerText = data.message;
-    }
-}
-
-function processConfirmPayment(confirmPaymentCallback = function(response){}) {
-    clearErrorMessage();
-
-    const id = payConfig.paymentDetails.paymentToken;
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/api/payments/' + id, true);
-    xhr.onreadystatechange = function() {
-        processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback);
-    }
-
-    xhr.send();
-}
-
-function processConfirmPaymentRequestStateChange(xhr, confirmPaymentCallback = function(response){}) {
-    if (xhr.readyState !== 4) {
-        return;
-    }
-    if (xhr.status !== 200) {
-        console.error("unexpected api response code", xhr.status, xhr.responseText);
-        showErrorMessage("An api error occurred, please check console.log for details");
-        return;
-    }
-    const response = JSON.parse(xhr.responseText);
-    if (typeof response.crossReference === 'undefined') {
-        console.error("unexpected api response", response);
-        showErrorMessage("An api error occurred, please check console.log for details");
-        return;
-    }
-    payment = response;
-    const transactionTable = document.getElementById("payResultTable");
-    for (const prop in response) {
-        if (response.hasOwnProperty(prop)) {
-            const fieldCell = document.createElement('td');
-            fieldCell.innerText = prop;
-            const valueCell = document.createElement('td');
-            valueCell.innerText = response[prop];
-            const tableRow = document.createElement('tr');
-            tableRow.appendChild(fieldCell);
-            tableRow.appendChild(valueCell);
-            transactionTable.appendChild(tableRow);
-        }
-    }
-    document.getElementById("sectionPayResultLoading").classList.add("hidden");
-    document.getElementById("sectionPayResultTable").classList.remove("hidden");
-
-    if (typeof confirmPaymentCallback === 'function') {
-        confirmPaymentCallback(response);
-    }
-}
-
-function displayErrors(errors) {
-    const errorsDiv = document.getElementById('errors');
-    errorsDiv.innerHTML = '';
-    if (errors && errors.length) {
-        const list = document.createElement("ul");
-        for (const error of errors){
-            const item = document.createElement("li");
-            item.innerText = error.message;
-            list.appendChild(item);
-        }
-        errorsDiv.appendChild(list);
     }
 }

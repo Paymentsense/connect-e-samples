@@ -13,23 +13,24 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="{{ env('CONNECT_E_BASE_WEB_URL') }}/assets/js/client.js"></script>
     <script src="{{ url("js/pay_config.js") }}"></script>
+    <script src="{{ url("js/shared.js") }}"></script>
     <script src="{{ url("js/sale.js") }}"></script>
-    <script src="{{ url("js/refund.js") }}"></script>
     <script type="text/javascript">
         window.addEventListener('load', function () {
-            const btnOrder = document.getElementById("btnOrder");
-            btnOrder.onclick = () => processOrder();
-
-            let confirmPaymentCallback = function(response) {
-                document.getElementById("inputRefundCrossReference").value = response.crossReference;
-                document.getElementById("sectionRefund").classList.remove("hidden");
+            const onBtnOrderClick = function() {
+                const crossRef = document.getElementById("inputCrossReference").value;
+                if (crossRef.length === 0) {
+                    showErrorMessage("Cross Reference is required for refund transactions");
+                    return false;
+                }
+                processOrder();
             }
 
-            const btnPay = document.getElementById("btnPay");
-            btnPay.onclick = () => processPayment(confirmPaymentCallback);
+            const btnOrder = document.getElementById("btnOrder");
+            btnOrder.onclick = () => onBtnOrderClick();
 
-            const btnRefund = document.getElementById("btnRefund");
-            btnRefund.onclick = () => processRefund();
+            const btnStartPayment = document.getElementById("btnStartPayment");
+            btnStartPayment.onclick = () => processCrossReference();
         })
     </script>
 @endsection
@@ -37,36 +38,7 @@
 @section('body')
     <h1>Refund</h1>
     @include('shared.error')
-    @include('shared.order', ['transactionType' => 'SALE'])
-    @include('shared.card_help')
-    @include('shared.pay')
+    @include('shared.order', ['transactionType' => 'REFUND', 'showCrossRef' => true])
+    @include('shared.order_payment_token')
     @include('shared.pay_result')
-    <div id="sectionRefund" class="hidden">
-        <h2>Refund</h2>
-        <form id="refundForm">
-            <div class="form-group">
-                <label for="inputRefundTransactionType">Transaction type</label>
-                <input class="form-control" type="text" id="inputRefundTransactionType" value="REFUND" readonly>
-            </div>
-            <div class="form-group">
-                <label for="inputRefundCrossReference">Cross Reference</label>
-                <input class="form-control" type="text" id="inputRefundCrossReference" value="" readonly>
-            </div>
-            <button id="btnRefund" type="submit" class="btn-primary btn pull-right">Refund</button>
-        </form>
-    </div>
-    <div id="sectionRefundResult" class="hidden">
-        <h3>Result</h3>
-        <div id="sectionRefundResultLoading">
-            <p>Loading...</p>
-        </div>
-        <div id="sectionRefundResultTable" class="hidden">
-            <table id="refundResultTable">
-                <tr>
-                    <th>Field</th>
-                    <th>Value</th>
-                </tr>
-            </table>
-        </div>
-    </div>
 @endsection

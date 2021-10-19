@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Subscription')
+@section('title', 'Collection')
 
 @section('stylesheets')
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -20,7 +20,7 @@
             const onBtnOrderClick = function() {
                 const crossRef = document.getElementById("inputCrossReference").value;
                 if (crossRef.length === 0) {
-                    showErrorMessage("Cross Reference cannot be empty for subscription/repeat payments");
+                    showErrorMessage("Cross Reference is required for collection transactions");
                     return false;
                 }
                 processOrder();
@@ -36,9 +36,9 @@
 @endsection
 
 @section('body')
-    <h1>Subscription</h1>
+    <h1>Collection</h1>
     @include('shared.error')
-    @include('shared.order', ['transactionType' => 'SALE', 'showCrossRef' => true])
+    @include('shared.order', ['transactionType' => 'COLLECTION', 'showCrossRef' => true])
     @include('shared.order_payment_token')
     @include('shared.pay_result')
 @endsection

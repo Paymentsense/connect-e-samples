@@ -6,6 +6,11 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class WebController extends BaseController
 {
+    public function collection()
+    {
+        return view('collection');
+    }
+
     public function home()
     {
         return view('home');
@@ -29,5 +34,15 @@ class WebController extends BaseController
     public function subscription()
     {
         return view('subscription');
+    }
+
+    public function void()
+    {
+        return view('void');
+    }
+
+    public function wallet()
+    {
+        return view('wallet');
     }
 }
