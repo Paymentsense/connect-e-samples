@@ -22,6 +22,7 @@ FROM alpine
 COPY --from=builder /go/src/app/dist /usr/local/bin/web/app
 COPY --from=builder2 /go/src/app/app /usr/local/bin/app
 COPY --from=builder2 /go/src/app/web/template /usr/local/bin/web/template
+COPY --from=builder2 /go/src/app/assets /usr/local/bin/assets
 WORKDIR /usr/local/bin
 
 CMD ["/usr/local/bin/app"]
