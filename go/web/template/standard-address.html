@@ -6,79 +6,88 @@
 <div class="container">
     <div class="demo1">
         <h1>Standard with Address Demo Payment</h1>
-        <form id="testForm" novalidate>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Billing Address</h4>
-                    <div class="form-group">
-                        <label for="userEmailAddress">Email address</label>
-                        <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp"
-                            placeholder="Enter email">
-                    </div>
-                    <div class="form-group">
-                        <label for="userPhoneNumber">Phone Number</label>
-                        <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp" placeholder="Enter phone number">
-                    </div>
-                    <div class="form-group">
-                        <label for="address1">Address line 1</label>
-                        <input type="text" class="form-control" id="address1" aria-describedby="address1"
-                            placeholder="Address line 1" required
-                            data-validation-message="Please enter address line 1">
-                    </div>
-                    <div class="form-group">
-                        <label for="address2">Address line 2</label>
-                        <input type="text" class="form-control" id="address2" aria-describedby="address2"
-                            placeholder="Address line 2">
-                    </div>
-                    <div class="form-group">
-                        <label for="address3">Address line 3</label>
-                        <input type="text" class="form-control" id="address3" aria-describedby="address3"
-                            placeholder="Address line 3">
-                    </div>
-                    <div class="form-group">
-                        <label for="address4">Address line 4</label>
-                        <input type="text" class="form-control" id="address4" aria-describedby="address4"
-                            placeholder="Address line 4">
-                    </div>
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" aria-describedby="city" placeholder="City">
-                    </div>
-                    <div class="form-group">
-                        <label for="state">State/County</label>
-                        <input type="text" class="form-control" id="state" aria-describedby="state" placeholder="State">
-                    </div>
-                    <div class="form-group">
-                        <label for="postcode">Postcode</label>
-                        <input type="text" class="form-control" id="postcode" aria-describedby="postcode"
-                            placeholder="Postcode" required data-validation-message="Please enter the postcode">
-                    </div>
-                    <div class="form-group">
-                        <label for="country">Country</label>
-
-                        <select id="country" class="form-control"  name="connectCountry" required title="Select a country" data-validation-message="Please select a country">
-                            <option  disabled value="" selected hidden>Select a country</option>
-                            <option value="036">Australia</option>
-                            <option value="250">France</option>
-                            <option value="554">New Zealand</option>
-                            <option value="826">United Kingdom</option>
-                            <option value="840">United States</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <h4>Card Details</h4>
-                    <div id="demo"></div>
-                </div>
-                <div class="col-12">
-                    <div id="errors"></div>
-                    <div class="text-right">
-                        <button id="payBtn" type="submit" class="btn btn-primary pull-right">Pay</button>
-                    </div>
-
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="payment-wallet"></div>
             </div>
-        </form>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <form id="testForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Billing Address</h4>
+                            <div class="form-group">
+                                <label for="userEmailAddress">Email address</label>
+                                <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp"
+                                    placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="userPhoneNumber">Phone Number</label>
+                                <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp" placeholder="Enter phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="address1">Address line 1</label>
+                                <input type="text" class="form-control" id="address1" aria-describedby="address1"
+                                    placeholder="Address line 1" required
+                                    data-validation-message="Please enter address line 1">
+                            </div>
+                            <div class="form-group">
+                                <label for="address2">Address line 2</label>
+                                <input type="text" class="form-control" id="address2" aria-describedby="address2"
+                                    placeholder="Address line 2">
+                            </div>
+                            <div class="form-group">
+                                <label for="address3">Address line 3</label>
+                                <input type="text" class="form-control" id="address3" aria-describedby="address3"
+                                    placeholder="Address line 3">
+                            </div>
+                            <div class="form-group">
+                                <label for="address4">Address line 4</label>
+                                <input type="text" class="form-control" id="address4" aria-describedby="address4"
+                                    placeholder="Address line 4">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city" aria-describedby="city" placeholder="City">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/County</label>
+                                <input type="text" class="form-control" id="state" aria-describedby="state" placeholder="State">
+                            </div>
+                            <div class="form-group">
+                                <label for="postcode">Postcode</label>
+                                <input type="text" class="form-control" id="postcode" aria-describedby="postcode"
+                                    placeholder="Postcode" required data-validation-message="Please enter the postcode">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+
+                                <select id="country" class="form-control"  name="connectCountry" required title="Select a country" data-validation-message="Please select a country">
+                                    <option  disabled value="" selected hidden>Select a country</option>
+                                    <option value="036">Australia</option>
+                                    <option value="250">France</option>
+                                    <option value="554">New Zealand</option>
+                                    <option value="826">United Kingdom</option>
+                                    <option value="840">United States</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Card Details</h4>
+                            <div id="demo"></div>
+                        </div>
+                        <div class="col-12">
+                            <div id="errors"></div>
+                            <div class="text-right">
+                                <button id="payBtn" type="submit" class="btn btn-primary pull-right">Pay</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 <script src="{{.HostBaseURL}}/assets/js/client.js" asp-append-version="true"></script>
@@ -206,7 +215,7 @@
 
             connectE.executePayment(extraInfo)
                     .then(function (data) {
-                        window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
+                        paymentComplete(data);
                     })
                     .catch(function (data) {
                                 document.getElementById("loader").remove();
@@ -261,6 +270,29 @@
 
     function onPaymentFormSubmit(evnt) {
         form.onsubmit(evnt);
+    }
+
+    var configWallet = {
+        containerId: "payment-wallet",
+        paymentDetails: {
+            amount: "{{.Amount}}",
+            currencyCode: "{{.CurrencyCode}}",
+            paymentToken: "{{.ID}}",
+            countryCode: "GB"
+        },
+        buttonConfig: {
+            color: 'black',
+            type: 'plain'
+        },
+        emailRequired: true,
+        billingAddressRequired: true,
+        shippingAddressRequired: false
+    };
+
+    var wallet = new Connect.Wallet(configWallet, displayErrors, paymentComplete);
+
+    function paymentComplete(response) {
+        window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
     }
 </script>
 
