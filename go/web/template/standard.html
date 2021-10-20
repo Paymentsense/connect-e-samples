@@ -7,7 +7,12 @@
     <div class="demo1">
         <h1>Standard Demo Payment</h1>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
+                <div id="payment-wallet"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <form id="testForm">
                     <div class="form-group">
                         <label for="userEmailAddress">Email address</label>
@@ -128,7 +133,7 @@
 
         connectE.executePayment(extraInfo)
         .then(function(data) {
-            window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
+            paymentComplete(data);
         })
         .catch(function(data) {
             console.log(data);
@@ -154,6 +159,29 @@
             });
             errorsDiv.appendChild(list);
         }
+    }
+
+    var configWallet = {
+        containerId: "payment-wallet",
+        paymentDetails: {
+            amount: "{{.Amount}}",
+            currencyCode: "{{.CurrencyCode}}",
+            paymentToken: "{{.ID}}",
+            countryCode: "GB"
+        },
+        buttonConfig: {
+            color: 'black',
+            type: 'plain'
+        },
+        emailRequired: true,
+        billingAddressRequired: true,
+        shippingAddressRequired: false
+    };
+
+    var wallet = new Connect.Wallet(configWallet, displayErrors, paymentComplete);
+
+    function paymentComplete(response) {
+        window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
     }
 </script>
 
