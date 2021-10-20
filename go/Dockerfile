@@ -1,4 +1,4 @@
-FROM node:14-alpine AS builder
+FROM node:14.17.6-slim AS builder
 
 WORKDIR /go/src/app
 
