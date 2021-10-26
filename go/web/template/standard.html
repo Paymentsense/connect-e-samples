@@ -11,11 +11,13 @@
                 <form id="testForm">
                     <div class="form-group">
                         <label for="userEmailAddress">Email address</label>
-                        <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp" placeholder="Enter email">
+                        <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp"
+                               placeholder="Enter email">
                     </div>
                     <div class="form-group">
                         <label for="userPhoneNumber">Phone Number</label>
-                        <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp" placeholder="Enter phone number">
+                        <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp"
+                               placeholder="Enter phone number">
                     </div>
                     <div id="demo"></div>
 
@@ -28,7 +30,7 @@
     </div>
 </div>
 
-<script src="{{.HostBaseURL}}/assets/js/client.js" ></script>
+<script src="{{.HostBaseURL}}/assets/js/client.js"></script>
 <script>
     var config = {
         paymentDetails: {
@@ -63,8 +65,18 @@
                     color: "#B00",
                     borderColor: "#B00"
                 },
+                errorFocus: {
+                    color: "#900",
+                    borderColor: "#B00",
+                    boxShadow: '0 0 0 0.2rem rgba(180,0,0,.25)'
+                },
                 valid: {
-                    color: "green"
+                    color: "#090",
+                    borderColor: "#090"
+                },
+                validFocus: {
+                    color: "green",
+                    boxShadow: '0 0 0 0.2rem rgba(0,180,0,.25)'
                 },
                 container: {
                     marginBottom: '1rem'
@@ -112,8 +124,8 @@
 
     var connectE = new Connect.ConnectE(config, displayErrors);
     var form = document.getElementById("testForm");
-    
-    form.onsubmit = function(evnt) {
+
+    form.onsubmit = function (evnt) {
         evnt.stopPropagation();
         var loader = document.createElement("div");
         loader.id = "loader";
@@ -127,17 +139,17 @@
         };
 
         connectE.executePayment(extraInfo)
-        .then(function(data) {
-            window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
-        })
-        .catch(function(data) {
-            console.log(data);
-            document.getElementById("loader").remove();
-            if(typeof data.message === "string" ){
-                errors.innerText = 'Payment failed: ' + data.message;
-            }
+            .then(function (data) {
+                window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
+            })
+            .catch(function (data) {
+                console.log(data);
+                document.getElementById("loader").remove();
+                if (typeof data.message === "string") {
+                    errors.innerText = 'Payment failed: ' + data.message;
+                }
 
-        });
+            });
         return false;
     }
 
@@ -147,7 +159,7 @@
         errorsDiv.innerHTML = '';
         if (errors && errors.length) {
             var list = document.createElement("ul");
-            errors.forEach(function(error) {
+            errors.forEach(function (error) {
                 var item = document.createElement("li");
                 item.innerText = error.message;
                 list.appendChild(item);
