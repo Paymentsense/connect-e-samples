@@ -34,7 +34,6 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	r.LoadHTMLGlob(relativePath + "web/*/**.html")
 
 	r.GET("/", e.standard)
-	r.GET("/wallet", e.wallet)
 	r.GET("/complete/:id", e.standardComplete)
 	r.GET("/checkout", e.checkout)
 	r.POST("/checkout-complete", e.checkoutComplete)
@@ -46,11 +45,14 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	r.GET("/health-check", func(c *gin.Context) {
 		c.String(http.StatusOK, "%s", "Ok")
 	})
-	r.GET("/angular", e.angular)
-	r.Static("/angular", relativePath+"web/app")
 	r.GET("/configure", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "config.html", nil)
 	})
+	r.StaticFile("/.well-known/apple-developer-merchantid-domain-association", relativePath+"assets/apple-developer-merchantid-domain-association")
+
+	// angular endpoints
+	r.GET("/angular", e.angular)
+	r.Static("/angular", relativePath+"web/app")
 	api := r.Group("/api")
 	{
 		api.GET("/access-token", e.accessToken)
@@ -69,18 +71,6 @@ func (e Endpoint) standard(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "standard.html", paymentToken)
-}
-
-func (e Endpoint) wallet(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
-	paymentToken, err := e.getPaymentToken(c)
-	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
-	}
-
-	c.HTML(http.StatusOK, "wallet.html", paymentToken)
 }
 
 func (e Endpoint) standardComplete(c *gin.Context) {

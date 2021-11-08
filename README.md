@@ -7,14 +7,15 @@ For more information, please check [Connect-e](https://docs.connect.paymentsense
 ## Features
 
 1. Standard Payment
-1. Checkout Payment
-1. Recurring Payment
-1. Refund Payment
-1. Void/Reversal Payment
+2. Checkout Payment
+3. Recurring Payment
+4. Refund Payment
+5. Void/Reversal Payment
 
 ## Samples
 
 * [Golang](./go)
 * [Node.js](./nodejs)
+* [PHP](./php)
 
 With the UI written in [Angular](https://angular.io/).
