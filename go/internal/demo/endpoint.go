@@ -88,7 +88,7 @@ func (e Endpoint) standardComplete(c *gin.Context) {
 
 	id := c.Param("id")
 
-	paymentInfo, err := e.paymentService.getPaymentInfo(getApiKey(c.Request), id)
+	paymentInfo, err := e.paymentService.getPaymentInfo(getApiKey(c.Request), id, getSandboxFlag(c))
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment info. err: %v", err)
 		return
@@ -134,7 +134,7 @@ func (e Endpoint) refund(c *gin.Context) {
 		CrossReference: paymentToken.CrossReference,
 	}
 
-	result, err := e.paymentService.executeCrossReferencePayment(getApiKey(c.Request), paymentToken.AccessToken, request)
+	result, err := e.paymentService.executeCrossReferencePayment(getApiKey(c.Request), paymentToken.AccessToken, request, getSandboxFlag(c))
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to execute cross reference payment. err: %v", err)
 		return
@@ -240,7 +240,7 @@ func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
 		return paymentToken, nil
 	}
 
-	if err := e.paymentService.createPaymentToken(getApiKey(c.Request), &paymentToken); err != nil {
+	if err := e.paymentService.createPaymentToken(getApiKey(c.Request), &paymentToken, getSandboxFlag(c)); err != nil {
 		return paymentToken, err
 	}
 

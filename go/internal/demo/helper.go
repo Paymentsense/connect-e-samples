@@ -1,6 +1,7 @@
 package demo
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 )
@@ -49,6 +50,10 @@ func getWebhookURL() string {
 		webhookURL += "/webhooks"
 	}
 	return webhookURL
+}
+
+func getSandboxFlag(c *gin.Context) bool {
+	return c.Query("isSandbox") == "true"
 }
 
 func getEnvOrDefault(key string, d string) string {
