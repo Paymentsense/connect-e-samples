@@ -3,6 +3,8 @@ package demo
 import (
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func getApiKey(r *http.Request) string {
@@ -49,6 +51,10 @@ func getWebhookURL() string {
 		webhookURL += "/webhooks"
 	}
 	return webhookURL
+}
+
+func getSandboxFlag(c *gin.Context) bool {
+	return c.Query("isSandbox") == "true"
 }
 
 func getEnvOrDefault(key string, d string) string {

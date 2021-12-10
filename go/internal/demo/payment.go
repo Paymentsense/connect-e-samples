@@ -98,21 +98,21 @@ func NewPaymentService(apiURL, webURL string) paymentService {
 	}
 }
 
-func (p paymentService) getPaymentInfo(apiKey, id string) (paymentInfo, error) {
+func (p paymentService) getPaymentInfo(apiKey, id string, isSandbox bool) (paymentInfo, error) {
 	paymentInfo := paymentInfo{}
 
-	if err := p.callAPI(apiKey, http.MethodGet, p.apiURL+"/payments/"+id, nil, &paymentInfo); err != nil {
+	if err := p.callAPI(apiKey, http.MethodGet, p.apiURL+"/payments/"+id, nil, &paymentInfo, isSandbox); err != nil {
 		return paymentInfo, err
 	}
 
 	return paymentInfo, nil
 }
 
-func (p paymentService) createPaymentToken(apiKey string, paymentToken *paymentToken) error {
+func (p paymentService) createPaymentToken(apiKey string, paymentToken *paymentToken, isSandbox bool) error {
 	buildDefaultToken(paymentToken)
 
 	tr := paymentTokenResponse{}
-	if err := p.callAPI(apiKey, http.MethodPost, p.apiURL+"/access-tokens", paymentToken, &tr); err != nil {
+	if err := p.callAPI(apiKey, http.MethodPost, p.apiURL+"/access-tokens", paymentToken, &tr, isSandbox); err != nil {
 		return err
 	}
 
@@ -123,17 +123,17 @@ func (p paymentService) createPaymentToken(apiKey string, paymentToken *paymentT
 	return nil
 }
 
-func (p paymentService) executeCrossReferencePayment(apiKey string, token string, request crossReferencePaymentRequest) (crossReferencePaymentResponse, error) {
+func (p paymentService) executeCrossReferencePayment(apiKey string, token string, request crossReferencePaymentRequest, isSandbox bool) (crossReferencePaymentResponse, error) {
 	pr := crossReferencePaymentResponse{}
 
-	if err := p.callAPI(apiKey, http.MethodPost, p.apiURL+"/cross-reference-payments/"+token, request, &pr); err != nil {
+	if err := p.callAPI(apiKey, http.MethodPost, p.apiURL+"/cross-reference-payments/"+token, request, &pr, isSandbox); err != nil {
 		return pr, err
 	}
 
 	return pr, nil
 }
 
-func (p paymentService) callAPI(apiKey, method, url string, body interface{}, response interface{}) error {
+func (p paymentService) callAPI(apiKey, method, url string, body interface{}, response interface{}, isSandbox bool) error {
 	var req *http.Request
 	var err error
 
@@ -154,6 +154,9 @@ func (p paymentService) callAPI(apiKey, method, url string, body interface{}, re
 
 	req.Header.Add("Authorization", "Bearer "+apiKey)
 	req.Header.Add("Content-Type", "application/json")
+	if isSandbox {
+		req.Header.Add("IS_SANDBOX", "true")
+	}
 
 	resp, err := p.client.Do(req)
 	if err != nil {
