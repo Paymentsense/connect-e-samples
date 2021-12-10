@@ -1,9 +1,10 @@
 package demo
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func getApiKey(r *http.Request) string {

@@ -88,7 +88,9 @@ func (e Endpoint) standardComplete(c *gin.Context) {
 
 	id := c.Param("id")
 
-	paymentInfo, err := e.paymentService.getPaymentInfo(getApiKey(c.Request), id, getSandboxFlag(c))
+	sandboxFlag := getSandboxFlag(c)
+	key := getApiKey(c.Request)
+	paymentInfo, err := e.paymentService.getPaymentInfo(key, id, sandboxFlag)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment info. err: %v", err)
 		return
