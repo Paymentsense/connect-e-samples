@@ -41,7 +41,6 @@
         paymentDetails: {
             paymentToken: "{{.ID}}"
         },
-        billingAddressRequired: true,
         containerId: "demo",
         fontCss: ['https://fonts.googleapis.com/css?family=Do+Hyeon'],
         styles: {
@@ -174,10 +173,7 @@
     var configWallet = {
         containerId: "payment-wallet",
         paymentDetails: {
-            amount: "{{.Amount}}",
-            currencyCode: "{{.CurrencyCode}}",
-            paymentToken: "{{.ID}}",
-            countryCode: "GB"
+            paymentToken: "{{.ID}}"
         },
         buttonConfig: {
             color: 'black',
