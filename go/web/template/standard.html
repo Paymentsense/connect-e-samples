@@ -39,10 +39,9 @@
 <script>
     var config = {
         paymentDetails: {
-            amount: "{{.Amount}}",
-            currencyCode: "{{.CurrencyCode}}",
             paymentToken: "{{.ID}}"
         },
+        billingAddressRequired: true,
         containerId: "demo",
         fontCss: ['https://fonts.googleapis.com/css?family=Do+Hyeon'],
         styles: {
@@ -108,8 +107,7 @@
                     boxSizing: "border-box"
                 },
 
-            },
-
+            }
         },
         text: {
             cv2: {
