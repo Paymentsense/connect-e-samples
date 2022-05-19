@@ -185,10 +185,7 @@
     function paymentComplete(response) {
         console.log(response);
         document.getElementById("loader").remove();
-
-        setTimeout(function() {
-            window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
-        }, 3000);
+        window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
     }
 </script>
 
