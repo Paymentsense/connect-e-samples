@@ -94,8 +94,6 @@
 <script>
     var config = {
         paymentDetails: {
-            amount: "{{.Amount}}",
-            currencyCode: "{{.CurrencyCode}}",
             paymentToken: "{{.ID}}"
         },
         containerId: "demo",
@@ -275,10 +273,7 @@
     var configWallet = {
         containerId: "payment-wallet",
         paymentDetails: {
-            amount: "{{.Amount}}",
-            currencyCode: "{{.CurrencyCode}}",
-            paymentToken: "{{.ID}}",
-            countryCode: "GB"
+            paymentToken: "{{.ID}}"
         },
         buttonConfig: {
             color: 'black',

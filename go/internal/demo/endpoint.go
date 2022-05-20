@@ -40,6 +40,7 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	r.POST("/refund", e.refund)
 	r.GET("/recurring", e.recurring)
 	r.GET("/standard-address", e.standardAddress)
+	r.GET("/standard-billing-address", e.standardBillingAddress)
 	r.POST("/webhooks", e.addWebhook)
 	r.GET("/webhooks", e.listWebhooks)
 	r.GET("/health-check", func(c *gin.Context) {
@@ -157,6 +158,18 @@ func (e Endpoint) standardAddress(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "standard-address.html", paymentToken)
+}
+
+func (e Endpoint) standardBillingAddress(c *gin.Context) {
+	e.addHeaders(c.Writer)
+
+	paymentToken, err := e.getPaymentToken(c)
+	if err != nil {
+		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
+		return
+	}
+
+	c.HTML(http.StatusOK, "standard-billing-address.html", paymentToken)
 }
 
 func (e Endpoint) addWebhook(c *gin.Context) {

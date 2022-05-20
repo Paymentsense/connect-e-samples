@@ -1,4 +1,4 @@
-FROM node:14.17.6-slim AS builder
+FROM node:16.15.0 AS builder
 
 WORKDIR /go/src/app
 
@@ -6,10 +6,11 @@ COPY angular .
 
 ARG ENV=production
 
-RUN npm install --silent
+RUN if [ ! -d "node_modules" ]; then npm install --silent ; fi
+
 RUN node_modules/.bin/ng build -c $ENV
 
-FROM golang:1.17-alpine as builder2
+FROM golang:1.18-alpine as builder2
 
 WORKDIR /go/src/app
 COPY . .

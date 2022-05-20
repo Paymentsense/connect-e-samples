@@ -4,33 +4,19 @@
 {{ template "header.html" .}}
 
 <div class="container">
-    <div class="demo1">
-        <h1>Standard Demo Payment</h1>
-        <div class="row">
-            <div class="col-md-12">
-                <div id="payment-wallet"></div>
-            </div>
+    <h1>Standard Demo Payment With Billing Address</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="payment-wallet"></div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <form id="testForm">
-                    <div class="form-group">
-                        <label for="userEmailAddress">Email address</label>
-                        <input type="email" class="form-control" id="userEmailAddress" aria-describedby="emailHelp"
-                               placeholder="Enter email">
-                    </div>
-                    <div class="form-group">
-                        <label for="userPhoneNumber">Phone Number</label>
-                        <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp"
-                               placeholder="Enter phone number">
-                    </div>
-                    <div id="demo"></div>
-
-                    <div class="text-danger" id="errors"></div>
-                    <div class="text-danger" id="paymentErrors"></div>
-                    <button id="payBtn" type="submit" class="btn btn-primary">Pay</button>
-                </form>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="test-form">
+                <div id="demo"></div>
+                <div class="text-danger" id="paymentErrors"></div>
+                <button id="pay-btn" type="submit" class="btn btn-primary">Pay</button>
+            </form>
         </div>
     </div>
 </div>
@@ -38,17 +24,18 @@
 <script src="{{.HostBaseURL}}/assets/js/client.js"></script>
 <script>
     var config = {
+        containerId: "demo",
         paymentDetails: {
             paymentToken: "{{.ID}}"
         },
-        containerId: "demo",
-        fontCss: ['https://fonts.googleapis.com/css?family=Do+Hyeon'],
+        billingAddressRequired: true,
+        fontCss: ['https://fonts.googleapis.com/css?family=Roboto'],
         styles: {
             base: {
                 default: {
                     color: "black",
                     textDecoration: "none",
-                    fontFamily: "'Do Hyeon', sans-serif",
+                    fontFamily: "'Roboto', sans-serif",
                     boxSizing: "border-box",
                     padding: ".375rem .75rem",
                     boxShadow: 'none',
@@ -56,6 +43,15 @@
                     borderRadius: '.25rem',
                     lineHeight: '1.5',
                     backgroundColor: '#fff'
+                },
+                container: {
+                    fontFamily: "'Roboto', sans-serif",
+                    height: '110px'
+                },
+                label: {
+                    fontFamily: "'Roboto', sans-serif",
+                    marginBottom: '.5rem',
+                    display: 'inline-block'
                 },
                 focus: {
                     color: '#495057',
@@ -80,14 +76,6 @@
                 validFocus: {
                     color: "green",
                     boxShadow: '0 0 0 0.2rem rgba(0,180,0,.25)'
-                },
-                container: {
-                    marginBottom: '1rem'
-                },
-                label: {
-                    fontFamily: "'Do Hyeon', sans-serif",
-                    marginBottom: '.5rem',
-                    display: 'inline-block'
                 }
             },
             cv2: {
@@ -105,47 +93,72 @@
                     paddingRight: "5px",
                     boxSizing: "border-box"
                 },
-
-            }
+            },
+            cardIcon: {
+                top: "10px",
+                right: "10px",
+                marginTop: "29px"
+            },
         },
         text: {
+            cardName: {
+                showValidation: "true"
+            },
             cv2: {
-                label: "CVV",
-                placeholder: "CVV"
+                showValidation: "true"
             },
             cardNumber: {
-                label: "Card",
-                placeholder: "Card"
+                showValidation: "true"
             },
             expiryDate: {
-                label: "Expiry",
-                placeholder: "Expiry"
+                showValidation: "true"
+            },
+            billingAddress: {
+                addressLine1: {
+                    showValidation: "true"
+                },
+                addressLine2: {
+                    showValidation: "true"
+                },
+                addressLine3: {
+                    showValidation: "true"
+                },
+                city: {
+                    showValidation: "true"
+                },
+                county: {
+                    showValidation: "true"
+                },
+                postcode: {
+                    showValidation: "true"
+                },
+                country: {
+                    showValidation: "true"
+                }
             }
         }
     };
 
     var connectE = new Connect.ConnectE(config, displayErrors);
-    var form = document.getElementById("testForm");
+    var form = document.getElementById("test-form");
 
     form.onsubmit = function (evnt) {
         evnt.stopPropagation();
+
         var loader = document.createElement("div");
         loader.id = "loader";
         document.body.appendChild(loader);
+
         var errors = document.getElementById("paymentErrors");
         errors.innerText = '';
 
-        var extraInfo = {
-            userEmailAddress: document.getElementById("userEmailAddress").value,
-            userPhoneNumber: document.getElementById("userPhoneNumber").value,
-        };
-
-        connectE.executePayment(extraInfo)
+        connectE.executePayment()
             .then(function (data) {
                 paymentComplete(data);
             })
             .catch(function (data) {
                 console.log(data);
+
                 document.getElementById("loader").remove();
                 if (typeof data.message === "string") {
                     errors.innerText = 'Payment failed: ' + data.message;
@@ -155,38 +168,23 @@
         return false;
     }
 
-    function displayErrors(errors) {
-        console.log(errors)
-        var errorsDiv = document.getElementById('errors');
-        errorsDiv.innerHTML = '';
-        if (errors && errors.length) {
-            var list = document.createElement("ul");
-            errors.forEach(function (error) {
-                var item = document.createElement("li");
-                item.innerText = error.message;
-                list.appendChild(item);
-            });
-            errorsDiv.appendChild(list);
-        }
-    }
-
     var configWallet = {
         containerId: "payment-wallet",
         paymentDetails: {
             paymentToken: "{{.ID}}"
         },
-        buttonConfig: {
-            color: 'black',
-            type: 'plain'
-        },
-        emailRequired: true,
-        billingAddressRequired: true,
-        shippingAddressRequired: false
+        billingAddressRequired: true
     };
 
     var wallet = new Connect.Wallet(configWallet, displayErrors, paymentComplete);
 
+    function displayErrors(errors) {
+        console.log(errors);
+    }
+
     function paymentComplete(response) {
+        console.log(response);
+        document.getElementById("loader").remove();
         window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
     }
 </script>

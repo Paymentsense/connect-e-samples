@@ -279,3 +279,5 @@ paket-files/
 __pycache__/
 *.pyc
 appengine-generated/
+
+docker-compose.yml
