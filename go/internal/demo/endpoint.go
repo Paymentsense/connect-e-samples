@@ -63,8 +63,6 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 }
 
 func (e Endpoint) standard(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
@@ -75,8 +73,6 @@ func (e Endpoint) standard(c *gin.Context) {
 }
 
 func (e Endpoint) standardComplete(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	id := c.Param("id")
 
 	sandboxFlag := getSandboxFlag(c)
@@ -91,8 +87,6 @@ func (e Endpoint) standardComplete(c *gin.Context) {
 }
 
 func (e Endpoint) checkout(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
@@ -103,8 +97,6 @@ func (e Endpoint) checkout(c *gin.Context) {
 }
 
 func (e Endpoint) checkoutComplete(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	checkoutComplete := checkoutComplete{}
 	if err := c.Bind(&checkoutComplete); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
@@ -115,8 +107,6 @@ func (e Endpoint) checkoutComplete(c *gin.Context) {
 }
 
 func (e Endpoint) refund(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
@@ -137,8 +127,6 @@ func (e Endpoint) refund(c *gin.Context) {
 }
 
 func (e Endpoint) recurring(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
@@ -149,8 +137,6 @@ func (e Endpoint) recurring(c *gin.Context) {
 }
 
 func (e Endpoint) standardAddress(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
@@ -161,8 +147,6 @@ func (e Endpoint) standardAddress(c *gin.Context) {
 }
 
 func (e Endpoint) standardBillingAddress(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
@@ -196,8 +180,6 @@ func (e Endpoint) listWebhooks(c *gin.Context) {
 }
 
 func (e Endpoint) angular(c *gin.Context) {
-	e.addHeaders(c.Writer)
-
 	m := struct {
 		HostBaseURL string `json:"hostBaseUrl" form:"hostBaseUrl"`
 	}{
@@ -226,11 +208,6 @@ func (e Endpoint) accessToken(c *gin.Context) {
 	}
 
 	c.Data(http.StatusOK, "plain/text", writer)
-}
-
-func (e Endpoint) addHeaders(w http.ResponseWriter) {
-	w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
-	w.Header().Add("Content-Security-Policy", "default-src 'self' * 'unsafe-inline' *.paymentsense.cloud *.appspot.com *.bootstrapcdn.com fonts.googleapis.com fonts.gstatic.com; frame-ancestors 'none'; frame-src *;")
 }
 
 func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
