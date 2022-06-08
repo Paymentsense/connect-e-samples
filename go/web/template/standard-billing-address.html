@@ -184,7 +184,11 @@
 
     function paymentComplete(response) {
         console.log(response);
-        document.getElementById("loader").remove();
+
+        if (document.getElementById("loader")) {
+            document.getElementById("loader").remove();
+        }
+        
         window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
     }
 </script>
