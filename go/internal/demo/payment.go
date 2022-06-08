@@ -12,33 +12,33 @@ import (
 )
 
 type paymentToken struct {
-	ID                    string `json:"id" form:"id"`
-	CurrencyCode          string `json:"currencyCode" form:"currencyCode"`
-	Amount                string `json:"amount" form:"amount"`
-	TransactionType       string `json:"transactionType" form:"transactionType"`
-	TransactionSource     string `json:"transactionSource" form:"transactionSource"`
-	OrderID               string `json:"orderId" form:"orderId"`
-	OrderDescription      string `json:"orderDescription" form:"orderDescription"`
-	UserAgent             string `json:"userAgent" form:"userAgent"`
-	UserEmailAddress      string `json:"userEmailAddress" form:"userEmailAddress"`
-	UserPhoneNumber       string `json:"userPhoneNumber" form:"userPhoneNumber"`
-	UserIpAddress         string `json:"userIpAddress" form:"userIpAddress"`
-	GatewayUsername       string `json:"gatewayUsername" form:"gatewayUsername"`
-	GatewayPassword       string `json:"gatewayPassword" form:"gatewayPassword"`
-	UserAddress1          string `json:"userAddress1" form:"userAddress1"`
-	UserAddress2          string `json:"userAddress2" form:"userAddress2"`
-	UserAddress3          string `json:"userAddress3" form:"userAddress3"`
-	UserAddress4          string `json:"userAddress4" form:"userAddress4"`
-	UserCity              string `json:"userCity" form:"userCity"`
-	UserState             string `json:"userState" form:"userState"`
-	UserPostcode          string `json:"userPostcode" form:"userPostcode"`
-	UserCountryCode       string `json:"userCountryCode" form:"userCountryCode"`
-	HostBaseURL           string `json:"hostBaseUrl" form:"hostBaseUrl"`
-	AccessToken           string `json:"accessToken" form:"accessToken"`
-	CrossReference        string `json:"crossReference" form:"crossReference"`
-	MerchantURL           string `json:"merchantUrl" form:"merchantUrl"`
-	PreviousTransactionID string `json:"previousTransactionId" form:"previousTransactionId"`
-	WebhookURL            string `json:"webhookUrl" form:"webhookUrl"`
+	ID                    string `json:"id" form:"id" query:"id"`
+	CurrencyCode          string `json:"currencyCode" form:"currencyCode" query:"currencyCode"`
+	Amount                string `json:"amount" form:"amount" query:"amount"`
+	TransactionType       string `json:"transactionType" form:"transactionType" query:"transactionType"`
+	TransactionSource     string `json:"transactionSource" form:"transactionSource" query:"transactionSource"`
+	OrderID               string `json:"orderId" form:"orderId" query:"orderId"`
+	OrderDescription      string `json:"orderDescription" form:"orderDescription" query:"orderDescription"`
+	UserAgent             string `json:"userAgent" form:"userAgent" query:"userAgent"`
+	UserEmailAddress      string `json:"userEmailAddress" form:"userEmailAddress" query:"userEmailAddress"`
+	UserPhoneNumber       string `json:"userPhoneNumber" form:"userPhoneNumber" query:"userPhoneNumber"`
+	UserIpAddress         string `json:"userIpAddress" form:"userIpAddress" query:"userIpAddress"`
+	GatewayUsername       string `json:"gatewayUsername" form:"gatewayUsername" query:"gatewayUsername"`
+	GatewayPassword       string `json:"gatewayPassword" form:"gatewayPassword" query:"gatewayPassword"`
+	UserAddress1          string `json:"userAddress1" form:"userAddress1" query:"userAddress1"`
+	UserAddress2          string `json:"userAddress2" form:"userAddress2" query:"userAddress2"`
+	UserAddress3          string `json:"userAddress3" form:"userAddress3" query:"userAddress3"`
+	UserAddress4          string `json:"userAddress4" form:"userAddress4" query:"userAddress4"`
+	UserCity              string `json:"userCity" form:"userCity" query:"userCity"`
+	UserState             string `json:"userState" form:"userState" query:"userState"`
+	UserPostcode          string `json:"userPostcode" form:"userPostcode" query:"userPostcode"`
+	UserCountryCode       string `json:"userCountryCode" form:"userCountryCode" query:"userCountryCode"`
+	HostBaseURL           string `json:"hostBaseUrl" form:"hostBaseUrl" query:"hostBaseUrl"`
+	AccessToken           string `json:"accessToken" form:"accessToken" query:"accessToken"`
+	CrossReference        string `json:"crossReference" form:"crossReference" query:"crossReference"`
+	MerchantURL           string `json:"merchantUrl" form:"merchantUrl" query:"merchantUrl"`
+	PreviousTransactionID string `json:"previousTransactionId" form:"previousTransactionId" query:"previousTransactionId"`
+	WebhookURL            string `json:"webhookUrl" form:"webhookUrl" query:"webhookUrl"`
 }
 
 type paymentTokenResponse struct {
@@ -90,7 +90,7 @@ type paymentService struct {
 	client *http.Client
 }
 
-func NewPaymentService(apiURL, webURL string) paymentService {
+func newPaymentService(apiURL, webURL string) paymentService {
 	return paymentService{
 		apiURL: apiURL,
 		webURL: webURL,

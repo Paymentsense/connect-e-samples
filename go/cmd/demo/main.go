@@ -12,7 +12,7 @@ func main() {
 		log.Fatalf("error initialising server. error: %v", err)
 	}
 
-	if err := srv.Run(); err != nil {
+	if err := srv.Start(); err != nil {
 		log.Fatalf("error starting server. error: %v", err)
 	}
 }
