@@ -6,32 +6,32 @@ import (
 	"os"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 )
 
-type Endpoint struct {
+type endpoint struct {
 	paymentService paymentService
 	webhooks       map[string]time.Time
 }
 
-func NewEndpoint(paymentService paymentService) Endpoint {
+func newEndpoint(paymentService paymentService) *endpoint {
 	webhooks := make(map[string]time.Time)
 
-	return Endpoint{
+	return &endpoint{
 		paymentService: paymentService,
 		webhooks:       webhooks,
 	}
 }
 
-func (e Endpoint) Init() (*gin.Engine, error) {
+func (e endpoint) init() (*echo.Echo, error) {
 	var relativePath = "./"
 
 	if _, err := os.Stat("web"); err != nil {
 		relativePath = "../../"
 	}
 
-	r := gin.Default()
-	r.LoadHTMLGlob(relativePath + "web/*/**.html")
+	r := echo.New()
+	r.Renderer = newRenderer(relativePath + "web/*/**.html")
 
 	r.GET("/", e.standard)
 	r.GET("/complete/:id", e.standardComplete)
@@ -43,13 +43,13 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	r.GET("/standard-billing-address", e.standardBillingAddress)
 	r.POST("/webhooks", e.addWebhook)
 	r.GET("/webhooks", e.listWebhooks)
-	r.GET("/health-check", func(c *gin.Context) {
-		c.String(http.StatusOK, "%s", "Ok")
+	r.GET("/health-check", func(c echo.Context) error {
+		return c.String(http.StatusOK, http.StatusText(http.StatusOK))
 	})
-	r.GET("/configure", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "config.html", nil)
+	r.GET("/configure", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "config.html", nil)
 	})
-	r.StaticFile("/.well-known/apple-developer-merchantid-domain-association", relativePath+"assets/apple-developer-merchantid-domain-association")
+	r.Static("/.well-known/apple-developer-merchantid-domain-association", relativePath+"assets/apple-developer-merchantid-domain-association")
 
 	// angular endpoints
 	r.GET("/angular", e.angular)
@@ -62,140 +62,130 @@ func (e Endpoint) Init() (*gin.Engine, error) {
 	return r, nil
 }
 
-func (e Endpoint) standard(c *gin.Context) {
+func (e endpoint) standard(c echo.Context) error {
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "standard.html", paymentToken)
+	return c.Render(http.StatusOK, "standard.html", paymentToken)
 }
 
-func (e Endpoint) standardComplete(c *gin.Context) {
+func (e endpoint) standardComplete(c echo.Context) error {
 	id := c.Param("id")
 
 	sandboxFlag := getSandboxFlag(c)
-	key := getApiKey(c.Request)
+	key := getApiKey(c.Request())
 	paymentInfo, err := e.paymentService.getPaymentInfo(key, id, sandboxFlag)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment info. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "complete.html", paymentInfo)
+	return c.Render(http.StatusOK, "complete.html", paymentInfo)
 }
 
-func (e Endpoint) checkout(c *gin.Context) {
+func (e endpoint) checkout(c echo.Context) error {
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "checkout.html", paymentToken)
+	return c.Render(http.StatusOK, "checkout.html", paymentToken)
 }
 
-func (e Endpoint) checkoutComplete(c *gin.Context) {
+func (e endpoint) checkoutComplete(c echo.Context) error {
 	checkoutComplete := checkoutComplete{}
 	if err := c.Bind(&checkoutComplete); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	c.HTML(http.StatusOK, "checkout-complete.html", checkoutComplete)
+	return c.Render(http.StatusOK, "checkout-complete.html", checkoutComplete)
 }
 
-func (e Endpoint) refund(c *gin.Context) {
+func (e endpoint) refund(c echo.Context) error {
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
 	request := crossReferencePaymentRequest{
 		CrossReference: paymentToken.CrossReference,
 	}
 
-	result, err := e.paymentService.executeCrossReferencePayment(getApiKey(c.Request), paymentToken.AccessToken, request, getSandboxFlag(c))
+	result, err := e.paymentService.executeCrossReferencePayment(getApiKey(c.Request()), paymentToken.AccessToken, request, getSandboxFlag(c))
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to execute cross reference payment. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "refund-complete.html", result)
+	return c.Render(http.StatusOK, "refund-complete.html", result)
 }
 
-func (e Endpoint) recurring(c *gin.Context) {
+func (e endpoint) recurring(c echo.Context) error {
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "recurring-payment.html", paymentToken)
+	return c.Render(http.StatusOK, "recurring-payment.html", paymentToken)
 }
 
-func (e Endpoint) standardAddress(c *gin.Context) {
+func (e endpoint) standardAddress(c echo.Context) error {
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "standard-address.html", paymentToken)
+	return c.Render(http.StatusOK, "standard-address.html", paymentToken)
 }
 
-func (e Endpoint) standardBillingAddress(c *gin.Context) {
+func (e endpoint) standardBillingAddress(c echo.Context) error {
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
-	c.HTML(http.StatusOK, "standard-billing-address.html", paymentToken)
+	return c.Render(http.StatusOK, "standard-billing-address.html", paymentToken)
 }
 
-func (e Endpoint) addWebhook(c *gin.Context) {
+func (e endpoint) addWebhook(c echo.Context) error {
 	m := struct {
 		ID string `json:"id" form:"id"`
 	}{}
 
 	if err := c.Bind(&m); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
 	e.webhooks[m.ID] = time.Now()
+
+	return nil
 }
 
-func (e Endpoint) listWebhooks(c *gin.Context) {
+func (e endpoint) listWebhooks(c echo.Context) error {
 	writer, err := json.Marshal(e.webhooks)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	c.Data(http.StatusOK, "application/json", writer)
+	return c.Blob(http.StatusOK, echo.MIMEApplicationJSON, writer)
 }
 
-func (e Endpoint) angular(c *gin.Context) {
+func (e endpoint) angular(c echo.Context) error {
 	m := struct {
 		HostBaseURL string `json:"hostBaseUrl" form:"hostBaseUrl"`
 	}{
 		HostBaseURL: getWebHostURL(),
 	}
 
-	c.HTML(http.StatusOK, "index.html", m)
+	return c.Render(http.StatusOK, "index.html", m)
 }
 
-func (e Endpoint) accessToken(c *gin.Context) {
-	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
+func (e endpoint) accessToken(c echo.Context) error {
+	c.Request().Header.Add("Access-Control-Allow-Origin", "*")
 
 	paymentToken, err := e.getPaymentToken(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, "error trying to get payment token. err: %v", err)
-		return
+		return err
 	}
 
 	tkn := paymentTokenResponse{
@@ -203,14 +193,13 @@ func (e Endpoint) accessToken(c *gin.Context) {
 	}
 	writer, err := json.Marshal(tkn)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	c.Data(http.StatusOK, "plain/text", writer)
+	return c.Blob(http.StatusOK, echo.MIMETextPlain, writer)
 }
 
-func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
+func (e endpoint) getPaymentToken(c echo.Context) (paymentToken, error) {
 	paymentToken := paymentToken{}
 	if err := c.Bind(&paymentToken); err != nil {
 		return paymentToken, err
@@ -222,7 +211,7 @@ func (e Endpoint) getPaymentToken(c *gin.Context) (paymentToken, error) {
 		return paymentToken, nil
 	}
 
-	if err := e.paymentService.createPaymentToken(getApiKey(c.Request), &paymentToken, getSandboxFlag(c)); err != nil {
+	if err := e.paymentService.createPaymentToken(getApiKey(c.Request()), &paymentToken, getSandboxFlag(c)); err != nil {
 		return paymentToken, err
 	}
 

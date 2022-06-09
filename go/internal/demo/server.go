@@ -3,12 +3,12 @@ package demo
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 )
 
 type Server struct {
 	Address string
-	Router  *gin.Engine
+	Router  *echo.Echo
 }
 
 func NewServer() *Server {
@@ -19,10 +19,10 @@ func NewServer() *Server {
 func (s *Server) Init() error {
 	s.Address = fmt.Sprintf(":%s", getPort())
 
-	paymentService := NewPaymentService(getApiHostURL(), getWebHostURL())
-	endpoint := NewEndpoint(paymentService)
+	paymentService := newPaymentService(getApiHostURL(), getWebHostURL())
+	endpoint := newEndpoint(paymentService)
 
-	router, err := endpoint.Init()
+	router, err := endpoint.init()
 	if err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func (s *Server) Init() error {
 	return nil
 }
 
-// Run a server
-func (s *Server) Run() error {
-	return s.Router.Run(s.Address)
+// Start a server
+func (s *Server) Start() error {
+	return s.Router.Start(s.Address)
 }
