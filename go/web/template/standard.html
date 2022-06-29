@@ -138,6 +138,7 @@
         var extraInfo = {
             userEmailAddress: document.getElementById("userEmailAddress").value,
             userPhoneNumber: document.getElementById("userPhoneNumber").value,
+            savePaymentMethod: "{{.CustomerID}}" != ''
         };
 
         connectE.executePayment(extraInfo)
