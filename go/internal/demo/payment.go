@@ -39,6 +39,7 @@ type paymentToken struct {
 	MerchantURL           string `json:"merchantUrl" form:"merchantUrl" query:"merchantUrl"`
 	PreviousTransactionID string `json:"previousTransactionId" form:"previousTransactionId" query:"previousTransactionId"`
 	WebhookURL            string `json:"webhookUrl" form:"webhookUrl" query:"webhookUrl"`
+	CustomerID            string `json:"customerId" form:"customerId" query:"customerId"`
 }
 
 type paymentTokenResponse struct {

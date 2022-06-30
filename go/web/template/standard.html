@@ -24,8 +24,16 @@
                         <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp"
                                placeholder="Enter phone number">
                     </div>
+                    
                     <div id="demo"></div>
 
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="savePaymentMethod">
+                        <label class="form-check-label" for="savePaymentMethod">
+                            Save Payment Method
+                        </label>
+                    </div>
+                    
                     <div class="text-danger" id="errors"></div>
                     <div class="text-danger" id="paymentErrors"></div>
                     <button id="payBtn" type="submit" class="btn btn-primary">Pay</button>
@@ -138,6 +146,7 @@
         var extraInfo = {
             userEmailAddress: document.getElementById("userEmailAddress").value,
             userPhoneNumber: document.getElementById("userPhoneNumber").value,
+            savePaymentMethod: document.getElementById("savePaymentMethod").checked
         };
 
         connectE.executePayment(extraInfo)
