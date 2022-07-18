@@ -1,0 +1,48 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    {{ title }}
+  </h1>
+  <h2>
+    {{ tokenType }}
+    <div *ngIf="tokenType == 'PREAUTH'">
+      <h4>remove /?type=PREAUTH from url for sale</h4>     
+    </div>
+    <div *ngIf="tokenType == 'SALE'">
+      <h4>add /?type=PREAUTH to url for preauth</h4>
+    </div>
+  </h2>
+
+  <div class="container">
+      <div class="lds-ring" *ngIf="isLoading || (isPaymentExecuting && !paymentResult)" ><div></div></div>
+
+      <div *ngIf="!isLoading">
+        <div class="form-group">
+          <label for="exampleName">Name</label>
+          <input type="text" class="form-control" id="exampleName" placeholder="Enter name">
+        </div>
+        
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+      </div>
+
+      <div id="payment"></div>
+      <div class="loading"  *ngIf="isPaymentExecuting"></div>
+      <div *ngIf="!isLoading">
+          <button id="payBtn" mat-raised-button  disabled="{{isPaymentExecuting}}" color="primary" class="btn" (click)="payBtnClick()" >Pay</button>
+      </div>
+      <ul class="errors">
+        <li *ngFor="let error of validationErrors">{{error.message}}</li>
+      </ul>
+  </div>
+  
+  <div *ngIf="paymentResult">
+    <div *ngIf="tokenType == 'PREAUTH'">
+      <button id="collectBtn" mat-raised-button  color="primary" class="btn" (click)="collectBtnClick()" >Collect</button>
+    </div>
+    <h4>Payment Info</h4>
+    <app-payment-info [paymentInfo]="paymentResult"></app-payment-info>
+  </div>
+</div>
