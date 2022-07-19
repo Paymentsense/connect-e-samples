@@ -99,7 +99,12 @@
         document.body.appendChild(loader);
         var errors = document.getElementById("paymentErrors");
         errors.innerText = '';
-        connectE.executePayment()
+
+        var extraInfo = {
+            paymentMethodId: "{{.PaymentMethodID}}"
+        };
+
+        connectE.executePayment(extraInfo)
                 .then(function(data) {
                     window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
                 })
