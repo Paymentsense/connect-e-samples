@@ -17,5 +17,6 @@ For more information, please check [Connect-e](https://docs.connect.paymentsense
 * [Golang](./go)
 * [Node.js](./nodejs)
 * [PHP](./php)
+* [.NET](./dotnet)
 
 With the UI written in [Angular](https://angular.io/).
