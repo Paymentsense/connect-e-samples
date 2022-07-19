@@ -5,10 +5,15 @@
 
 <div class="container">
     <div class="demo1">
-        <h1>Recurring Demo Payment</h1>
+        <h1>Recurring With Saved Payment Method Demo Payment</h1>
         <div class="row">
             <div class="col-md-6">
                 <form id="testForm">
+                    <div class="form-group">
+                        <label for="paymentMethodId">Payment Method ID</label>
+                        <input type="text" class="form-control" id="paymentMethodId" placeholder="Enter payment method ID">
+                    </div>
+
                     <div id="demo"></div>
 
                     <div class="text-danger" id="errors"></div>
@@ -93,7 +98,7 @@
         errors.innerText = '';
 
         var extraInfo = {
-            paymentMethodId: "{{.PaymentMethodID}}"
+            paymentMethodId: document.getElementById("paymentMethodId").value
         };
 
         connectE.executePayment(extraInfo)
@@ -113,9 +118,11 @@
     }
 
     function displayErrors(errors) {
-        console.log(errors)
+        console.log(errors);
+
         var errorsDiv = document.getElementById('errors');
         errorsDiv.innerHTML = '';
+
         if (errors && errors.length) {
             var list = document.createElement("ul");
             errors.forEach(function(error) {
@@ -123,6 +130,7 @@
                 item.innerText = error.message;
                 list.appendChild(item);
             });
+
             errorsDiv.appendChild(list);
         }
     }
