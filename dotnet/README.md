@@ -12,7 +12,7 @@ This project is using .NET 6.0
 
 1. Change setting file [appsettings.json](./Paymentsense.Connect-e.Api/appsettings.json)
 
-2. Open and run [solution](./Paymentsense.Connect-e.sln)
+2. Open and run [Paymentsense.Connect-e.sln](./Paymentsense.Connect-e.sln)
 
 Angular UI
 
