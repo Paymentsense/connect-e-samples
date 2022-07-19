@@ -39,7 +39,6 @@ func (e endpoint) init() (*echo.Echo, error) {
 	r.POST("/checkout-complete", e.checkoutComplete)
 	r.POST("/refund", e.refund)
 	r.GET("/recurring", e.recurring)
-	r.GET("/recurring-saved-payment-method", e.recurringSavedPaymentMethod)
 	r.GET("/standard-address", e.standardAddress)
 	r.GET("/standard-billing-address", e.standardBillingAddress)
 	r.POST("/webhooks", e.addWebhook)
@@ -128,15 +127,6 @@ func (e endpoint) recurring(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "recurring-payment.html", paymentToken)
-}
-
-func (e endpoint) recurringSavedPaymentMethod(c echo.Context) error {
-	paymentToken, err := e.getPaymentToken(c)
-	if err != nil {
-		return err
-	}
-
-	return c.Render(http.StatusOK, "recurring-saved-payment-method.html", paymentToken)
 }
 
 func (e endpoint) standardAddress(c echo.Context) error {

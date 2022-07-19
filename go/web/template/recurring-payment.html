@@ -9,6 +9,11 @@
         <div class="row">
             <div class="col-md-6">
                 <form id="testForm">
+                    <div class="form-group">
+                        <label for="paymentMethodId">Payment Method ID</label>
+                        <input type="text" class="form-control" id="paymentMethodId" placeholder="Enter payment method ID">
+                    </div>
+
                     <div id="demo"></div>
 
                     <div class="text-danger" id="errors"></div>
@@ -93,7 +98,7 @@
         errors.innerText = '';
 
         var extraInfo = {
-            paymentMethodId: "{{.PaymentMethodID}}"
+            paymentMethodId: document.getElementById("paymentMethodId").value
         };
 
         connectE.executePayment(extraInfo)
