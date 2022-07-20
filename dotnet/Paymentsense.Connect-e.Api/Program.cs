@@ -1,6 +1,5 @@
 using Paymentsense.Connect_e.Api;
 using Paymentsense.Connect_e.Api.Models;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +29,6 @@ app.UseCors(x => x
     .SetIsOriginAllowed(origin => true) // allow any origin
     .AllowCredentials()); // allow credentials
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
