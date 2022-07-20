@@ -14,6 +14,18 @@ This project is using .NET 6.0
 
 2. Open and run solution: [Paymentsense.Connect-e.sln](./Paymentsense.Connect-e.sln)
 
+Alternatively you can run this project in command line
+
+1. Navigate to [Paymentsense.Connect-e.Api](./Paymentsense.Connect-e.Api) location
+
+2. Run this command:
+
+```bash
+dotnet run
+```
+
+3. Open your web browser and type [https://localhost:7190/swagger/index.html](https://localhost:7190/swagger/index.html)
+
 Angular UI
 
 1. Check and change if needed token url [tokenUrl](./angular/src/environments/environment.ts)
