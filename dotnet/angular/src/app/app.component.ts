@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
   }
 
   collectBtnClick = () =>{
-    this.http.get("https://localhost:7190/api/CardPayments/collection/" + PaymentConfig.paymentDetails.paymentToken).
+    this.http.get("http://localhost:7190/api/CardPayments/collection/" + PaymentConfig.paymentDetails.paymentToken).
       subscribe(data => {
         this.paymentResult = data
       });
