@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  tokenUrl: "http://localhost:7190/api/CardPayments/access-token"
+  apiUrl: "http://localhost:7190/api/CardPayments"
 };
 
 /*

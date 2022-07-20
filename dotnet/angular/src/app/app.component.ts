@@ -31,8 +31,8 @@ export class AppComponent implements OnInit {
     if(typeValue)
     {
       this.tokenType = typeValue;
-    }
-    this.http.get(environment.tokenUrl + "/" + this.tokenType).
+    }//environment.apiUrl
+    this.http.get(environment.apiUrl + "/access-token/" + this.tokenType).
     subscribe(data => {
         this.loadPaymentDetails(data["id"]);
       });
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
   }
 
   collectBtnClick = () =>{
-    this.http.get("http://localhost:7190/api/CardPayments/collection/" + PaymentConfig.paymentDetails.paymentToken).
+    this.http.get(environment.apiUrl + "/collection/" + PaymentConfig.paymentDetails.paymentToken).
       subscribe(data => {
         this.paymentResult = data
       });
