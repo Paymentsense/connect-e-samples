@@ -11,7 +11,7 @@
         public string expiryDate { get; set; }
         public string cardType { get; set; }
         public string cardName { get; set; }
-        public BillingAddress billingAddress { get; set; }
+        public Address billingAddress { get; set; }
         public ShippingDetails shippingDetails { get; set; }
         public string userEmailAddress { get; set; }
     }
