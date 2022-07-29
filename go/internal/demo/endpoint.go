@@ -49,7 +49,7 @@ func (e endpoint) init() (*echo.Echo, error) {
 	r.GET("/configure", func(c echo.Context) error {
 		return c.Render(http.StatusOK, "config.html", nil)
 	})
-	r.Static("/.well-known/apple-developer-merchantid-domain-association", relativePath+"assets/apple-developer-merchantid-domain-association")
+	r.Static("/.well-known", relativePath+"assets")
 
 	// angular endpoints
 	r.GET("/angular", e.angular)
