@@ -157,6 +157,8 @@ func (p paymentService) callAPI(apiKey, method, url string, body interface{}, re
 	req.Header.Add("Authorization", "Bearer "+apiKey)
 	req.Header.Add("Content-Type", "application/json")
 	if isSandbox {
+		//Duplicated while we rollout update
+		req.Header.Add("IS-SANDBOX", "true")
 		req.Header.Add("IS_SANDBOX", "true")
 	}
 
