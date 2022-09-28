@@ -15,7 +15,7 @@ FROM golang:1.18-alpine as builder2
 WORKDIR /go/src/app
 COPY . .
 
-RUN /usr/local/go/bin/go build -o app ./cmd/demo/
+RUN GOOS=linux GOARCH=amd64 /usr/local/go/bin/go build -o app ./cmd/demo/
 
 # Application image.
 FROM alpine
