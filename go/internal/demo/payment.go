@@ -41,7 +41,7 @@ type paymentToken struct {
 	WebhookURL            string `json:"webhookUrl" form:"webhookUrl" query:"webhookUrl"`
 	CustomerID            string `json:"customerId" form:"customerId" query:"customerId"`
 	PaymentMethodID       string `json:"paymentMethodId" form:"paymentMethodId" query:"paymentMethodId"`
-	WaitPreExecute        string `json:"waitPreExecute" form:"waitPreExecute" query:"waitPreExecute"`
+	WaitPreExecute        bool   `json:"waitPreExecute" form:"waitPreExecute" query:"waitPreExecute"`
 }
 
 type paymentTokenResponse struct {
