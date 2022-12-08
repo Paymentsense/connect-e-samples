@@ -76,7 +76,7 @@ func (e endpoint) standardComplete(c echo.Context) error {
 
 	sandboxFlag := getSandboxFlag(c)
 	key := getApiKey(c.Request())
-	paymentInfo, err := e.paymentService.getPaymentInfo(key, id, sandboxFlag)
+	paymentInfo, err := e.paymentService.getPaymentInfo(key, id, sandboxFlag, getUserIP(c.Request()))
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func (e endpoint) refund(c echo.Context) error {
 		CrossReference: paymentToken.CrossReference,
 	}
 
-	result, err := e.paymentService.executeCrossReferencePayment(getApiKey(c.Request()), paymentToken.AccessToken, request, getSandboxFlag(c))
+	result, err := e.paymentService.executeCrossReferencePayment(getApiKey(c.Request()), paymentToken.AccessToken, request, getSandboxFlag(c), getUserIP(c.Request()))
 	if err != nil {
 		return err
 	}
@@ -211,7 +211,7 @@ func (e endpoint) getPaymentToken(c echo.Context) (paymentToken, error) {
 		return paymentToken, nil
 	}
 
-	if err := e.paymentService.createPaymentToken(getApiKey(c.Request()), &paymentToken, getSandboxFlag(c)); err != nil {
+	if err := e.paymentService.createPaymentToken(getApiKey(c.Request()), &paymentToken, getSandboxFlag(c), getUserIP(c.Request())); err != nil {
 		return paymentToken, err
 	}
 
