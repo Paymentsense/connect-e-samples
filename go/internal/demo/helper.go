@@ -3,6 +3,7 @@ package demo
 import (
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -70,4 +71,19 @@ func getValueOrDefault(v string, d string) string {
 		return d
 	}
 	return v
+}
+
+func getUserIP(r *http.Request) string {
+	forwarded := r.Header.Get("X-Forwarded-For")
+	if forwarded != "" {
+		ips := strings.Split(forwarded, ",")
+
+		if len(ips) > 0 {
+			return strings.Trim(ips[0], " ")
+		}
+
+		return forwarded
+	}
+
+	return r.RemoteAddr
 }
