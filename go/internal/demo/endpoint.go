@@ -2,7 +2,6 @@ package demo
 
 import (
 	"encoding/json"
-	"github.com/labstack/gommon/log"
 	"net/http"
 	"os"
 	"time"
@@ -61,7 +60,7 @@ func (e endpoint) init() (*echo.Echo, error) {
 	}
 
 	r.HTTPErrorHandler = func(err error, context echo.Context) {
-		log.Errorf("error processing %s : %+v", context.Path(), err)
+		context.Logger().Errorf("error processing %s : %+v", context.Path(), err)
 		r.DefaultHTTPErrorHandler(err, context)
 	}
 
