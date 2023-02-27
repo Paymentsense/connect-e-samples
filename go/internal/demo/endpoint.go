@@ -59,6 +59,11 @@ func (e endpoint) init() (*echo.Echo, error) {
 		api.GET("/access-token", e.accessToken)
 	}
 
+	r.HTTPErrorHandler = func(err error, context echo.Context) {
+		context.Logger().Errorf("error processing %s : %+v", context.Path(), err)
+		r.DefaultHTTPErrorHandler(err, context)
+	}
+
 	return r, nil
 }
 

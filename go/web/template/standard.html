@@ -24,7 +24,28 @@
                         <input type="tel" class="form-control" id="userPhoneNumber" aria-describedby="phoneHelp"
                                placeholder="Enter phone number">
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="userPhoneNumber">Meta data</label>
+                        <div id="meta-data">
+                        <div class="row meta-data-row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control key" placeholder="key">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control value" placeholder="value">
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" id="add-meta-data" type="button">Add</button>
+                        </div>
+                    </div>
+
                     <div id="demo"></div>
 
                     <div class="form-check">
@@ -33,7 +54,7 @@
                             Save Payment Method
                         </label>
                     </div>
-                    
+
                     <div class="text-danger" id="errors"></div>
                     <div class="text-danger" id="paymentErrors"></div>
                     <button id="payBtn" type="submit" class="btn btn-primary">Pay</button>
@@ -143,11 +164,24 @@
         var errors = document.getElementById("paymentErrors");
         errors.innerText = '';
 
+        const metadata = {}
+        const rows = document.getElementsByClassName("meta-data-row")
+        for (let row of rows) {
+            const key = row.querySelector(".key")
+            const value = row.querySelector(".value")
+            if (key.value && value.value) {
+                metadata[key.value] = value.value
+            }
+        }
+
         var extraInfo = {
             userEmailAddress: document.getElementById("userEmailAddress").value,
             userPhoneNumber: document.getElementById("userPhoneNumber").value,
-            savePaymentMethod: document.getElementById("savePaymentMethod").checked
+            savePaymentMethod: document.getElementById("savePaymentMethod").checked,
+            metaData: metadata
         };
+
+
 
         connectE.executePayment(extraInfo)
             .then(function (data) {
@@ -198,6 +232,27 @@
     function paymentComplete(response) {
         window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
     }
+
+    const addButton = document.getElementById("add-meta-data")
+    addButton.onclick = () => {
+        const metaData = document.getElementById("meta-data")
+        const row = document.createElement("div")
+        row.classList.add("row")
+        row.classList.add("meta-data-row")
+        row.innerHTML = metaDataTemplate.trim()
+        metaData.append(row)
+    }
+
+    const metaDataTemplate = `<div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control key" placeholder="key">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control value" placeholder="value">
+                                </div>
+                            </div>`
 </script>
 
 <!--Embed the footer.html template at this location-->
