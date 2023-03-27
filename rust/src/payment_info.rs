@@ -20,12 +20,12 @@ pub struct PaymentInfo {
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct Address {
-	address_1        		:String,
-	address_2         		:Option<String>,
-	address_3         		:Option<String>,
-	address_4         		:Option<String>,
-	city         			:Option<String>,
-	country_code			:Option<String>,
-	state         			:Option<String>,
-	postcode         		:Option<String>,
+	address_1               :String,
+	address_2               :Option<String>,
+	address_3               :Option<String>,
+	address_4               :Option<String>,
+	city                    :Option<String>,
+	country_code            :Option<String>,
+	state                   :Option<String>,
+	postcode                :Option<String>,
 }
