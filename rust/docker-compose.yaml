@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  demo:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+        AUTH_KEY: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb25uZWN0LWUtZGV2QGFwcHNwb3QuZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imh0dHBzOi8vZS50ZXN0LmNvbm5lY3QucGF5bWVudHNlbnNlLmNsb3VkIiwiZXhwIjoyMzU1NDIyNDYxLCJpYXQiOjE1OTg1NTg0NjEsInN1YiI6ImNvbm5lY3QtZS1kZXZAYXBwc3BvdC5nc2VydmljZWFjY291bnQuY29tIiwiYXBpS2V5IjoiYTg5NDM5NzAtYjcyZS00MzYwLThlNzgtOWEzZTlhM2ZhYTY1IiwiZW1haWwiOiJjb25uZWN0LWUtZGV2QGFwcHNwb3QuZ3NlcnZpY2VhY2NvdW50LmNvbSJ9.eQA-sAYBkNCQTD90nsdmMM0w0WJWIbMFJMQpOYjD74ov_Bu-b-j1h-LFwSZPhIhLBKmKyAg_tGYWHZch4ukHhNzc4CTLarZr-Acmi4QggWdGjkpTfGfdd_vHr0s06ZrGFeVdR4xLHFve4oFSMOIdR7AZpt62vXPKRSRdhj4W8B5p9qjrXss_xM12CjPuM4rDw4hYcDjG3QyU15a5KmmP108BjGuOevYjq6tcqPxVz0mJ6clf_AgKfxHeIgtYu-u9eVCPr6oNIioIviudcrpaS1ZvE-E6nNRyGfrKLwupS1OMKEpgcXXwkNlhf9cUN8PW4x89oBCqvk8J5i6t5C8Wmg
+        API_URL: https://e.test.connect.paymentsense.cloud/v1
+        WEB_URL: https://web.e.test.connect.paymentsense.cloud
+        GATEWAY_USERNAME: connect-e-test-3ds1-api
+        GATEWAY_PASSWORD: connect-e-test-3ds1-api
+        PORT: 8080
