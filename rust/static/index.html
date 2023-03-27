@@ -92,7 +92,6 @@
         <script type="text/javascript" src="https://web.e.test.connect.paymentsense.cloud/assets/js/client.js"></script>
 
         <script>
-            const apiURL = 'https://e.test.connect.paymentsense.cloud/v1';
             var accessToken;
             
             createAccessToken();
@@ -113,13 +112,11 @@
                     body: JSON.stringify(request),
                     headers: {
                         'Content-Type': 'application/json'
-                    },
-                    crossorigin: true,    
-                    mode: 'no-cors'
+                    }
                 }
 
                 // send post request
-                fetch(apiURL + '/access-tokens', options)
+                fetch('/access-tokens', options)
                     .then(res => res.json())
                     .then(res => accessToken = res)
                     .then(res => loadPaymentForm(res))
@@ -130,13 +127,11 @@
                 // request options
                 const options = {
                     method: 'GET',
-                    cache: "default",
-                    crossorigin: true,    
-                    mode: 'no-cors'
+                    cache: "default"
                 }
 
                 // send post request
-                fetch(apiURL + '/payments/' + accessToken.id, options)
+                fetch('/payments/' + accessToken.id, options)
                     .then(res => res.json())
                     .then(res => accessToken = res)
                     .then(res => displayPaymentInfo(res))

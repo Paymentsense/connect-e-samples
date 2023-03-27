@@ -80,5 +80,5 @@ For more information see the [Docker Compose documentation](https://docs.docker.
 ### TODO
 
 1. Apply SOLID principles.
-2. Make API and Web URLs dynamic on static page(s) based on the environment variable.
+2. Make Web URL dynamic on static page(s) based on the environment variable.
 3. Make Access Token Creation dynamic based on the request.
