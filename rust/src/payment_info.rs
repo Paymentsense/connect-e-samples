@@ -3,12 +3,12 @@ use serde::{Serialize, Deserialize};
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PaymentInfo {
-	auth_code         		:Option<String>,
+	auth_code				:Option<String>,
 	billing_address			:Option<Address>,
-	expiry_date        		:String,
+	expiry_date				:String,
 	card_name				:Option<String>,
-	card_number        		:String,
-	card_type        		:String,
+	card_number				:String,
+	card_type				:String,
 	cross_reference			:Option<String>,
 	message					:Option<String>,
 	payment_method_id		:Option<String>,
