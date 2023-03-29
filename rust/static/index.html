@@ -1,0 +1,329 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Connect-E Demo</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+        
+        <style>
+            .form-group {
+                height: 100px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div id="payment">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto">
+                        <h1>Standard Demo Payment</h1>
+                    </div>
+                </div>
+                
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto">
+                        <div id="payment-wallet"></div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto">
+                        <form id="payment-form">
+                            <div class="form-group">
+                                <label for="userEmailAddress" class="form-label">Email address</label>
+                                <input type="email" id="userEmailAddress" class="form-control" placeholder="name@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="userPhoneNumber" class="form-label">Phone Number</label>
+                                <input type="tel" id="userPhoneNumber" class="form-control" placeholder="+353871112233">
+                            </div>
+                            
+                            <div id="payment-standard"></div>
+
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-auto text-centre">
+                                    <div id="errors" class="text-danger"></div>
+                                    <div id="payment-errors" class="text-danger"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-auto text-centre">
+                                    <button id="pay-btn" type="submit" class="btn btn-success">Pay</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="payment-complete" class="invisible">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto">
+                        <h1>Standard Demo Payment Complete</h1>
+                    </div>
+                </div>
+
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto text-centre">
+                        <dl>
+                            <dt>Status Code</dt>
+                            <dd id="statusCode"></dd>
+                            <dt>Auth Code</dt>
+                            <dd id="authCode"></dd>
+                            <dt>Message</dt>
+                            <dd id="message"></dd>
+                            <dt>Cross Reference</dt>
+                            <dd id="crossReference"></dd>
+                            <dt>Card Type</dt>
+                            <dd id="cardType"></dd>
+                            <dt>CardName</dt>
+                            <dd id="cardName"></dd>
+                            <dt>Card Number</dt>
+                            <dd id="cardNumber"></dd>
+                            <dt>Expiry Date</dt>
+                            <dd id="expiryDate"></dd>
+                            <dt>Email Address</dt>
+                            <dd id="emailAddress"></dd>
+                            <dt>Phone Number</dt>
+                            <dd id="phoneNumber"></dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto text-centre">
+                        <a class="btn btn-success" href="/">Try another test payment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="https://web.e.test.connect.paymentsense.cloud/assets/js/client.js"></script>
+
+        <script>
+            var accessToken;
+            
+            createAccessToken();
+
+            function createAccessToken() {
+                // create a JSON object
+                const request = {
+                    'amount': '100',
+                    'currencyCode': '826',
+                    'gatewayUsername': 'connect-e-test-3ds1-api',
+                    'orderId': 'ORDER-001',
+                    'transactionType': 'SALE'
+                }
+
+                // request options
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify(request),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+
+                // send post request
+                fetch('/access-tokens', options)
+                    .then(res => res.json())
+                    .then(res => accessToken = res)
+                    .then(res => loadPaymentForm(res))
+                    .catch(err => console.error(err));
+            }
+
+            function getPaymentInfo() {
+                // request options
+                const options = {
+                    method: 'GET',
+                    cache: "default"
+                }
+
+                // send post request
+                fetch('/payments/' + accessToken.id, options)
+                    .then(res => res.json())
+                    .then(res => accessToken = res)
+                    .then(res => displayPaymentInfo(res))
+                    .catch(err => console.error(err));
+            }
+
+            function loadPaymentForm() {
+                var config = {
+                    containerId: 'payment-standard',
+                    paymentDetails: {
+                        paymentToken: accessToken.id
+                    },
+                    billingAddressRequired: false,
+                    fontCss: ['https://fonts.googleapis.com/css?family=Roboto'],
+                    styles: {
+                        base: {
+                            default: {
+                                color: "black",
+                                textDecoration: "none",
+                                fontFamily: "'Roboto', sans-serif",
+                                boxSizing: "border-box",
+                                padding: ".375rem .75rem",
+                                boxShadow: 'none',
+                                fontSize: '1rem',
+                                borderRadius: '.25rem',
+                                lineHeight: '1.5',
+                                backgroundColor: '#fff'
+                            },
+                            container: {
+                                fontFamily: "'Roboto', sans-serif",
+                                height: '100px'
+                            },
+                            label: {
+                                fontFamily: "'Roboto', sans-serif",
+                                marginBottom: '.5rem',
+                                display: 'inline-block'
+                            },
+                            focus: {
+                                color: '#495057',
+                                backgroundColor: '#fff',
+                                borderColor: '#80bdff',
+                                outline: '0',
+                                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
+                            },
+                            error: {
+                                color: "#B00",
+                                borderColor: "#B00"
+                            },
+                            errorFocus: {
+                                color: "#900",
+                                borderColor: "#B00",
+                                boxShadow: '0 0 0 0.2rem rgba(180,0,0,.25)'
+                            },
+                            valid: {
+                                color: "#090",
+                                borderColor: "#090"
+                            },
+                            validFocus: {
+                                color: "green",
+                                boxShadow: '0 0 0 0.2rem rgba(0,180,0,.25)'
+                            }
+                        },
+                        cv2: {
+                            container: {
+                                width: "50%",
+                                float: "left",
+                                paddingLeft: "5px",
+                                boxSizing: "border-box"
+                            },
+                        },
+                        expiryDate: {
+                            container: {
+                                width: "50%",
+                                float: "left",
+                                paddingRight: "5px",
+                                boxSizing: "border-box"
+                            },
+                        },
+                        cardIcon: {
+                            top: "10px",
+                            right: "10px",
+                            marginTop: "29px"
+                        },
+                    }
+                };
+            
+                var connectE = new Connect.ConnectE(config, displayErrors);
+                var form = document.getElementById('payment-form');
+            
+                form.onsubmit = function (event) {
+                    event.stopPropagation();
+
+                    var loader = document.createElement('div');
+                    loader.id = 'loader';
+                    document.body.appendChild(loader);
+
+                    var errors = document.getElementById('payment-errors');
+                    errors.innerText = '';
+            
+                    var extraInfo = {
+                        userEmailAddress: document.getElementById("userEmailAddress").value,
+                        userPhoneNumber: document.getElementById("userPhoneNumber").value
+                    };
+
+                    connectE.executePayment(extraInfo)
+                        .then(function (data) {
+                            paymentComplete(data);
+                        })
+                        .catch(function (data) {
+                            console.log(data);
+                            document.getElementById('loader').remove();
+
+                            if (typeof data.message === 'string') {
+                                errors.innerText = 'Payment failed: ' + data.message;
+                            }
+            
+                        });
+                    return false;
+                }
+            
+                var configWallet = {
+                    containerId: 'payment-wallet',
+                    paymentDetails: {
+                        paymentToken: accessToken.id
+                    },
+                    buttonConfig: {
+                        color: 'black',
+                        type: 'plain'
+                    },
+                    emailRequired: true,
+                    billingAddressRequired: true,
+                    shippingAddressRequired: false
+                };
+            
+                var wallet = new Connect.Wallet(configWallet, displayErrors, paymentComplete);
+            }
+            
+        
+            function paymentComplete(response) {
+                console.log(response);
+                
+                getPaymentInfo()
+
+                document.getElementById('payment').remove();
+                document.getElementById('payment-complete').className = "visible";
+            }
+
+            function displayPaymentInfo(response) {
+                console.log(response);
+
+                document.getElementById('statusCode').innerText = response.statusCode;
+                document.getElementById('authCode').innerText = response.authCode;
+                document.getElementById('message').innerText = response.message;
+                document.getElementById('crossReference').innerText = response.crossReference;
+                document.getElementById('cardType').innerText = response.cardType;
+                document.getElementById('cardName').innerText = response.cardName;
+                document.getElementById('cardNumber').innerText = response.cardNumber;
+                document.getElementById('expiryDate').innerText = response.expiryDate;
+                document.getElementById('emailAddress').innerText = response.userEmailAddress;
+                document.getElementById('phoneNumber').innerText = response.userPhoneNumber;
+            }
+
+            function displayErrors(errors) {
+                var errorsDiv = document.getElementById('errors');
+                errorsDiv.innerHTML = '';
+
+                if (errors && errors.length) {
+                    var list = document.createElement('ul');
+
+                    errors.forEach(function (error) {
+                        var item = document.createElement('li');
+                        item.innerText = error.message;
+                        list.appendChild(item);
+                    });
+
+                    errorsDiv.appendChild(list);
+                }
+            }
+        </script>
+    </body>
+</html>
