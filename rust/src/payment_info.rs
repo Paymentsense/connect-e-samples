@@ -15,6 +15,7 @@ pub struct PaymentInfo {
 	status_code             :i32,
 	transaction_date_time   :Option<String>,
 	user_email_address      :Option<String>,
+	user_phone_number       :Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]

@@ -85,6 +85,10 @@
                             <dd id="cardNumber"></dd>
                             <dt>Expiry Date</dt>
                             <dd id="expiryDate"></dd>
+                            <dt>Email Address</dt>
+                            <dd id="emailAddress"></dd>
+                            <dt>Phone Number</dt>
+                            <dd id="phoneNumber"></dd>
                         </dl>
                     </div>
                 </div>
@@ -241,7 +245,12 @@
                     var errors = document.getElementById('payment-errors');
                     errors.innerText = '';
             
-                    connectE.executePayment()
+                    var extraInfo = {
+                        userEmailAddress: document.getElementById("userEmailAddress").value,
+                        userPhoneNumber: document.getElementById("userPhoneNumber").value
+                    };
+
+                    connectE.executePayment(extraInfo)
                         .then(function (data) {
                             paymentComplete(data);
                         })
@@ -295,6 +304,8 @@
                 document.getElementById('cardName').innerText = response.cardName;
                 document.getElementById('cardNumber').innerText = response.cardNumber;
                 document.getElementById('expiryDate').innerText = response.expiryDate;
+                document.getElementById('emailAddress').innerText = response.userEmailAddress;
+                document.getElementById('phoneNumber').innerText = response.userPhoneNumber;
             }
 
             function displayErrors(errors) {
