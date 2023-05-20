@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -208,6 +209,20 @@ func (e endpoint) getPaymentToken(c echo.Context) (paymentToken, error) {
 	paymentToken := paymentToken{}
 	if err := c.Bind(&paymentToken); err != nil {
 		return paymentToken, err
+	}
+
+	metaDataString := c.QueryParam("metadatastring")
+	if metaDataString != "" {
+		metaData := map[string]string{}
+		for _, row := range strings.Split(metaDataString, ",") {
+			kv := strings.Split(row, ":")
+			if len(kv) == 2 && len(kv[0]) > 0 && len(kv[1]) > 0 {
+				metaData[kv[0]] = kv[1]
+			}
+		}
+		if len(metaData) > 0 {
+			paymentToken.MetaData = metaData
+		}
 	}
 
 	if paymentToken.ID != "" {

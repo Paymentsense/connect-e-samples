@@ -115,6 +115,27 @@
                 <label for="WebhookURL">WebhookURL</label>
                 <input type="text" class="form-control" id="webhookURL" name="webhookURL" placeholder="WebhookURL">
             </div>
+            <div class="form-group">
+                <label for="userMetaData">Meta data</label>
+                <div id="userMetaData">
+                    <div class="row meta-data-row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control key" placeholder="key" name="metaDataKey">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control value" placeholder="value" name="metaDataValue">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id="add-meta-data" type="button">Add</button>
+                </div>
+            </div>
+
             <button id="checkout-btn" type="submit" class="btn btn-primary">Checkout</button>
             <button id="standard-btn" type="submit" class="btn btn-primary">Standard</button>
         </form>
@@ -169,16 +190,28 @@
 
 
     const buildQuery = (formId) => {
-        let query = ""
+        let query = []
         const inputs = document.getElementById(formId).getElementsByTagName("input")
         for (let input of inputs) {
-            if (input.value) {
-                query += `&${input.getAttribute("name")}=${encodeURIComponent(input.value)}`
-
+            if (input.value && !input.name.includes("metaData")) {
+                query.push(`${input.getAttribute("name")}=${encodeURIComponent(input.value)}`)
             }
         }
 
-        return query.length ? "?" + query.substr(1) : query
+        let metadataEntries = []
+        const rows = document.getElementsByClassName("meta-data-row")
+        for (let row of rows) {
+            const key = row.querySelector(".key")
+            const value = row.querySelector(".value")
+            if (key.value && value.value) {
+                metadataEntries.push(`${key.value}:${value.value}`)
+            }
+        }
+        if (metadataEntries.length > 0) {
+            query.push(`metadatastring=${encodeURIComponent(metadataEntries.join(","))}`)
+        }
+
+        return query.length ? "?" + query.join("&") : ""
     }
 
     const checkoutBtn = document.getElementById("checkout-btn")
@@ -193,4 +226,24 @@
         return false;
     }
 
+    const addButton = document.getElementById("add-meta-data")
+    addButton.onclick = () => {
+        const metaData = document.getElementById("userMetaData")
+        const row = document.createElement("div")
+        row.classList.add("row")
+        row.classList.add("meta-data-row")
+        row.innerHTML = metaDataTemplate.trim()
+        metaData.append(row)
+    }
+
+    const metaDataTemplate = `<div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control key" placeholder="key" name="metaDataKey">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control value" placeholder="value" name="metaDataValue">
+                                </div>
+                            </div>`
 </script>
