@@ -37,6 +37,7 @@ type paymentToken struct {
 	AccessToken           string            `json:"accessToken" form:"accessToken" query:"accessToken"`
 	CrossReference        string            `json:"crossReference" form:"crossReference" query:"crossReference"`
 	MerchantURL           string            `json:"merchantUrl" form:"merchantUrl" query:"merchantUrl"`
+	MerchantTransactionID string            `json:"merchantTransactionId" form:"merchantTransactionId" query:"merchantTransactionId"`
 	PreviousTransactionID string            `json:"previousTransactionId" form:"previousTransactionId" query:"previousTransactionId"`
 	WebhookURL            string            `json:"webhookUrl" form:"webhookUrl" query:"webhookUrl"`
 	CustomerID            string            `json:"customerId" form:"customerId" query:"customerId"`
@@ -150,6 +151,9 @@ func (p paymentService) callAPI(apiKey, method, url string, body interface{}, re
 		}
 
 		req, err = http.NewRequest(method, url, bytes.NewBuffer(b))
+		if err != nil {
+			return err
+		}
 	}
 
 	if err != nil {
