@@ -22,12 +22,13 @@ Below is the list of mandatory/optional environment variables required to run co
 
 ```bash
 CONNECT_E_KEY: PUT HERE THE JWT TOKEN
-API_URL: PUT HERE THE ENV API URL (https://connect-e-prod.appspot.com/v1, https://e.test.connect.paymentsense.cloud/v1)
-WEB_URL: PUT HERE THE ENV WEB URL (https://web.e.connect.paymentsense.cloud, https://web.e.test.connect.paymentsense.cloud)
+API_URL: PUT HERE THE ENV API URL (Prod: https://e.connect.paymentsense.cloud/v1, Staging: https://e.test.connect.paymentsense.cloud/v1)
+WEB_URL: PUT HERE THE ENV WEB URL (Prod: https://web.e.connect.paymentsense.cloud, Staging: https://web.e.test.connect.paymentsense.cloud)
 MERCHANT_URL: PUT HERE THE MERCHANT URL IF USING GATEWAY CYBERSOURCE
 GATEWAY_USERNAME: PUT HERE THE MERCHANT URL IF USING GATEWAY DIFFERENT FROM CYBERSOURCE
 GATEWAY_PASSWORD: PUT HERE THE MERCHANT URL IF USING GATEWAY DIFFERENT FROM CYBERSOURCE
 WEBHOOK_URL: PUT HERE THE WEBHOOK URL
+CDN_URL: PUT HERE THE DOJO CDN URL IF USING DOJO JS (Prod: https://cdn.dojo.tech, Staging: https://cdn.dojo.tech/test, Dev: https://cdn.dojo.tech/build)
 ```
 
 ### Running using docker-compose
@@ -49,6 +50,7 @@ services:
         GATEWAY_USERNAME: ${GATEWAY_USERNAME}
         GATEWAY_PASSWORD: ${GATEWAY_PASSWORD}
         WEBHOOK_URL: ${WEBHOOK_URL}
+        CDN_URL: ${CDN_URL}
 ```
 
 1. Build the docker image

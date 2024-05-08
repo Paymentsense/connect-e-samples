@@ -44,6 +44,7 @@ type paymentToken struct {
 	PaymentMethodID       string            `json:"paymentMethodId" form:"paymentMethodId" query:"paymentMethodId"`
 	WaitPreExecute        bool              `json:"waitPreExecute" form:"waitPreExecute" query:"waitPreExecute"`
 	MetaData              map[string]string `json:"metaData,omitempty"`
+	CDNBaseURL            string            `json:"cndBaseUrl" form:"cdnBaseUrl" query:"cdnBaseUrl"`
 }
 
 type paymentTokenResponse struct {
@@ -92,13 +93,15 @@ type crossReferencePaymentResponse struct {
 type paymentService struct {
 	apiURL string
 	webURL string
+	cdnURL string
 	client *http.Client
 }
 
-func newPaymentService(apiURL, webURL string) paymentService {
+func newPaymentService(apiURL, webURL, cdnURL string) paymentService {
 	return paymentService{
 		apiURL: apiURL,
 		webURL: webURL,
+		cdnURL: cdnURL,
 		client: http.DefaultClient,
 	}
 }
@@ -124,6 +127,7 @@ func (p paymentService) createPaymentToken(apiKey string, paymentToken *paymentT
 	paymentToken.ID = tr.ID
 	paymentToken.AccessToken = tr.ID
 	paymentToken.HostBaseURL = p.webURL
+	paymentToken.CDNBaseURL = p.cdnURL
 
 	return nil
 }
