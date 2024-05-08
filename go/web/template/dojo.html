@@ -172,8 +172,25 @@
         containerId: "payment-wallet",
         paymentDetails: {
             paymentToken: "{{.ID}}"
+        },
+        onIframeLoaded: onWalletLoaded,
+        callbacks: {
+            onPaymentInitiated: onWalletPaymentInitiated,
+            onPaymentCancelled: onWalletPaymentCancelled
         }
     };
+
+    function onWalletPaymentInitiated() {
+        console.log("Wallet payment iframe component initiated...");
+    }
+
+    function onWalletPaymentCancelled() {
+        console.log("Wallet payment cancelled");
+    }
+    
+    function onWalletLoaded() {
+        console.log("Wallet iframe loaded");
+    }
 
     var wallet = new Dojo.WalletPayment(configWallet, displayErrors, paymentComplete);
 
