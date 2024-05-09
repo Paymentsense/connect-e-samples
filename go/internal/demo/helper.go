@@ -58,6 +58,10 @@ func getSandboxFlag(c echo.Context) bool {
 	return c.QueryParam("isSandbox") == "true"
 }
 
+func getCDNURL() string {
+	return os.Getenv("CDN_URL")
+}
+
 func getEnvOrDefault(key string, d string) string {
 	osVar := os.Getenv(key)
 	if osVar == "" {

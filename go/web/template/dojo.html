@@ -1,0 +1,213 @@
+<!--standard.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div class="container">
+    <h1>Dojo Demo Payments</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="payment-wallet"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="test-form">
+                <div id="demo"></div>
+                <div class="text-danger" id="paymentErrors"></div>
+                <button id="pay-btn" type="submit" class="btn btn-primary">Pay</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{{.CDNBaseURL}}/payments/v1/client.js"></script>
+
+<script>
+    var config = {
+        containerId: "demo",
+        paymentDetails: {
+            paymentToken: "{{.ID}}"
+        },
+        fontCss: ['https://fonts.googleapis.com/css?family=Roboto'],
+        styles: {
+            base: {
+                default: {
+                    color: "black",
+                    textDecoration: "none",
+                    fontFamily: "'Roboto', sans-serif",
+                    boxSizing: "border-box",
+                    padding: ".375rem .75rem",
+                    boxShadow: 'none',
+                    fontSize: '1rem',
+                    borderRadius: '.25rem',
+                    lineHeight: '1.5',
+                    backgroundColor: '#fff'
+                },
+                container: {
+                    fontFamily: "'Roboto', sans-serif",
+                    height: '110px'
+                },
+                label: {
+                    fontFamily: "'Roboto', sans-serif",
+                    marginBottom: '.5rem',
+                    display: 'inline-block'
+                },
+                focus: {
+                    color: '#495057',
+                    backgroundColor: '#fff',
+                    borderColor: '#80bdff',
+                    outline: '0',
+                    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)'
+                },
+                error: {
+                    color: "#B00",
+                    borderColor: "#B00"
+                },
+                errorFocus: {
+                    color: "#900",
+                    borderColor: "#B00",
+                    boxShadow: '0 0 0 0.2rem rgba(180,0,0,.25)'
+                },
+                valid: {
+                    color: "#090",
+                    borderColor: "#090"
+                },
+                validFocus: {
+                    color: "green",
+                    boxShadow: '0 0 0 0.2rem rgba(0,180,0,.25)'
+                }
+            },
+            cv2: {
+                container: {
+                    width: "50%",
+                    float: "left",
+                    paddingLeft: "5px",
+                    boxSizing: "border-box"
+                },
+            },
+            expiryDate: {
+                container: {
+                    width: "50%",
+                    float: "left",
+                    paddingRight: "5px",
+                    boxSizing: "border-box"
+                },
+            },
+            cardIcon: {
+                top: "10px",
+                right: "10px",
+                marginTop: "29px"
+            },
+        },
+        text: {
+            cardName: {
+                showValidation: "true"
+            },
+            cv2: {
+                showValidation: "true"
+            },
+            cardNumber: {
+                showValidation: "true"
+            },
+            expiryDate: {
+                showValidation: "true"
+            },
+            billingAddress: {
+                addressLine1: {
+                    showValidation: "true"
+                },
+                addressLine2: {
+                    showValidation: "true"
+                },
+                addressLine3: {
+                    showValidation: "true"
+                },
+                city: {
+                    showValidation: "true"
+                },
+                county: {
+                    showValidation: "true"
+                },
+                postcode: {
+                    showValidation: "true"
+                },
+                country: {
+                    showValidation: "true"
+                }
+            }
+        }
+    };
+
+    var card = new Dojo.Payment(config, displayErrors);
+    var form = document.getElementById("test-form");
+
+    form.onsubmit = function (evnt) {
+        evnt.stopPropagation();
+
+        var loader = document.createElement("div");
+        loader.id = "loader";
+        document.body.appendChild(loader);
+
+        var errors = document.getElementById("paymentErrors");
+        errors.innerText = '';
+
+        card.executePayment()
+            .then(function (data) {
+                paymentComplete(data);
+            })
+            .catch(function (data) {
+                console.log(data);
+
+                document.getElementById("loader").remove();
+                if (typeof data.message === "string") {
+                    errors.innerText = 'Payment failed: ' + data.message;
+                }
+
+            });
+        return false;
+    }
+
+    var configWallet = {
+        containerId: "payment-wallet",
+        paymentDetails: {
+            paymentToken: "{{.ID}}"
+        },
+        onIframeLoaded: onWalletLoaded,
+        callbacks: {
+            onPaymentInitiated: onWalletPaymentInitiated,
+            onPaymentCancelled: onWalletPaymentCancelled
+        }
+    };
+
+    function onWalletPaymentInitiated() {
+        console.log("Wallet payment iframe component initiated...");
+    }
+
+    function onWalletPaymentCancelled() {
+        console.log("Wallet payment cancelled");
+    }
+    
+    function onWalletLoaded() {
+        console.log("Wallet iframe loaded");
+    }
+
+    var wallet = new Dojo.WalletPayment(configWallet, displayErrors, paymentComplete);
+
+    function displayErrors(errors) {
+        console.log(errors);
+    }
+
+    function paymentComplete(response) {
+        console.log(response);
+
+        if (document.getElementById("loader")) {
+            document.getElementById("loader").remove();
+        }
+        
+        window.location.href = '/complete/' + "{{.ID}}" + window.location.search;
+    }
+</script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

@@ -19,7 +19,7 @@ func NewServer() *Server {
 func (s *Server) Init() error {
 	s.Address = fmt.Sprintf(":%s", getPort())
 
-	paymentService := newPaymentService(getApiHostURL(), getWebHostURL())
+	paymentService := newPaymentService(getApiHostURL(), getWebHostURL(), getCDNURL())
 	endpoint := newEndpoint(paymentService)
 
 	router, err := endpoint.init()

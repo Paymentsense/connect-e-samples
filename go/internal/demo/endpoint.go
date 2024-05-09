@@ -60,6 +60,8 @@ func (e endpoint) init() (*echo.Echo, error) {
 		api.GET("/access-token", e.accessToken)
 	}
 
+	r.GET("/dojo", e.dojo)
+
 	r.HTTPErrorHandler = func(err error, context echo.Context) {
 		context.Logger().Errorf("error processing %s : %+v", context.Path(), err)
 		r.DefaultHTTPErrorHandler(err, context)
@@ -184,6 +186,15 @@ func (e endpoint) angular(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "index.html", m)
+}
+
+func (e endpoint) dojo(c echo.Context) error {
+	paymentToken, err := e.getPaymentToken(c)
+	if err != nil {
+		return err
+	}
+
+	return c.Render(http.StatusOK, "dojo.html", paymentToken)
 }
 
 func (e endpoint) accessToken(c echo.Context) error {
