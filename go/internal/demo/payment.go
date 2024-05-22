@@ -46,7 +46,7 @@ type paymentToken struct {
 	WaitPreExecute        bool              `json:"waitPreExecute" form:"waitPreExecute" query:"waitPreExecute"`
 	MetaData              map[string]string `json:"metaData,omitempty"`
 	CDNBaseURL            string            `json:"cndBaseUrl" form:"cdnBaseUrl" query:"cdnBaseUrl"`
-	COFSetup              cofSetup          `json:"cofSetup,omitempty" form:"cofSetup" query:"cofSetup"`
+	COFSetup              *cofSetup         `json:"cofSetup,omitempty" form:"cofSetup" query:"cofSetup"`
 }
 
 type paymentTokenResponse struct {

@@ -242,6 +242,37 @@ func (e endpoint) getPaymentToken(c echo.Context) (paymentToken, error) {
 		return paymentToken, nil
 	}
 
+	// COF Setup
+	if c.QueryParam("intendedAmount") != "" &&
+		c.QueryParam("type") != "" &&
+		c.QueryParam("terms") != "" {
+		paymentToken.COFSetup = &cofSetup{
+			IntendedAmount: c.QueryParam("intendedAmount"),
+			Type:           c.QueryParam("type"),
+			Terms:          c.QueryParam("terms"),
+		}
+
+		intendedExecutionDate := c.QueryParam("intendedExecutionDate")
+		if intendedExecutionDate != "" {
+			intendedExecutionDateParsed, err := time.Parse(time.RFC3339, intendedExecutionDate)
+			if err != nil {
+				return paymentToken, err
+			}
+
+			paymentToken.COFSetup.IntendedExecutionDate = intendedExecutionDateParsed
+		}
+
+		expiryDate := c.QueryParam("expiryDate")
+		if expiryDate != "" {
+			expiryDateParsed, err := time.Parse(time.RFC3339, expiryDate)
+			if err != nil {
+				return paymentToken, err
+			}
+
+			paymentToken.COFSetup.ExpiryDate = expiryDateParsed
+		}
+	}
+
 	if err := e.paymentService.createPaymentToken(getApiKey(c.Request()), &paymentToken, getSandboxFlag(c), getUserIP(c.Request())); err != nil {
 		return paymentToken, err
 	}
