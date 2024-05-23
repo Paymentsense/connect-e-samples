@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -45,11 +46,20 @@ type paymentToken struct {
 	WaitPreExecute        bool              `json:"waitPreExecute" form:"waitPreExecute" query:"waitPreExecute"`
 	MetaData              map[string]string `json:"metaData,omitempty"`
 	CDNBaseURL            string            `json:"cndBaseUrl" form:"cdnBaseUrl" query:"cdnBaseUrl"`
+	COFSetup              *cofSetup         `json:"cofSetup,omitempty" form:"cofSetup" query:"cofSetup"`
 }
 
 type paymentTokenResponse struct {
 	ID        string `json:"id"`
 	ExpiresAt int64  `json:"expiresAt"`
+}
+
+type cofSetup struct {
+	IntendedAmount        string    `json:"intendedAmount" form:"intendedAmount" query:"intendedAmount"`
+	IntendedExecutionDate time.Time `json:"intendedExecutionDate" form:"intendedExecutionDate" query:"intendedExecutionDate"`
+	ExpiryDate            time.Time `json:"expiryDate" form:"expiryDate" query:"expiryDate"`
+	Type                  string    `json:"type" form:"type" query:"type"`
+	Terms                 string    `json:"terms" form:"terms" query:"terms"`
 }
 
 type paymentInfo struct {
