@@ -55,6 +55,13 @@
                         </label>
                     </div>
 
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="giveMITConsent">
+                        <label class="form-check-label" for="giveMITConsent">
+                            Consent For Merchant Initiated Transaction
+                        </label>
+                    </div>
+
                     <div class="text-danger" id="errors"></div>
                     <div class="text-danger" id="paymentErrors"></div>
                     <button id="payBtn" type="submit" class="btn btn-primary">Pay</button>
@@ -178,7 +185,8 @@
             userEmailAddress: document.getElementById("userEmailAddress").value,
             userPhoneNumber: document.getElementById("userPhoneNumber").value,
             savePaymentMethod: document.getElementById("savePaymentMethod").checked,
-            metaData: metadata
+            metaData: metadata,
+            mitConsentGiven: document.getElementById("giveMITConsent").checked
         };
 
 
