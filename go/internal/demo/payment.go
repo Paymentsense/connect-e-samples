@@ -211,7 +211,7 @@ func (p paymentService) callAPI(apiKey, method, url string, body interface{}, re
 
 func buildDefaultToken(paymentToken *paymentToken) {
 	paymentToken.Amount = getValueOrDefault(paymentToken.Amount, "100")
-	paymentToken.CurrencyCode = getValueOrDefault(paymentToken.CurrencyCode, "826")
+	paymentToken.CurrencyCode = getValueOrDefault(paymentToken.CurrencyCode, getCurrencyCode())
 	paymentToken.GatewayUsername = getValueOrDefault(paymentToken.GatewayUsername, getGatewayUsername())
 	paymentToken.GatewayPassword = getValueOrDefault(paymentToken.GatewayPassword, getGatewayPassword())
 	paymentToken.MerchantURL = getValueOrDefault(paymentToken.MerchantURL, getMerchantURL())
