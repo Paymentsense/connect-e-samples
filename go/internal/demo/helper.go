@@ -96,6 +96,7 @@ func getUserIP(r *http.Request) string {
 func getCurrencyCode() string {
 	countryCode := strings.ToLower(os.Getenv("COUNTRY_CODE"))
 
+	// Refer https://en.wikipedia.org/wiki/ISO_4217#List_of_ISO_4217_currency_codes to expand and add more currency codes
 	if countryCode != "" {
 		switch countryCode {
 		case "gb":
