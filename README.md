@@ -1,5 +1,9 @@
 # Connect-e Samples
 
+---
+**This project has been moved to https://github.com/dojo-engineering/connect-e-samples and is no longer being maintained here**
+
+---
 Connect-e Samples provides examples of how to get started integrating with connect-e, see the [Samples](#samples) section.
 
 For more information, please check [Connect-e](https://docs.connect.paymentsense.cloud/ConnectE/GettingStarted) documentation.
